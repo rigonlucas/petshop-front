@@ -1,0 +1,3 @@
+interface RouteMeta {
+    title?: string
+}

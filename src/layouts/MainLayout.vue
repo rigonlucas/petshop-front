@@ -1,116 +1,113 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+    <q-layout view="lHh Lpr lFf">
+        <q-header elevated>
+            <q-toolbar>
+                <q-btn
+                    flat
+                    dense
+                    round
+                    icon="menu"
+                    aria-label="Menu"
+                    @click="toggleLeftDrawer"
+                />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+                <q-toolbar-title>
+                    Petshop
+                </q-toolbar-title>
+            </q-toolbar>
+        </q-header>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
+        <q-drawer
+            v-model="leftDrawerOpen"
+            show-if-above
+            bordered
+            :width="200"
         >
-          Essential Links
-        </q-item-label>
+            <q-list padding style="margin-top: 150px;">
+                <q-item clickable v-ripple :to="{ name: 'schedule.index' }">
+                    <q-item-section avatar>
+                        <q-icon name="calendar_today"/>
+                    </q-item-section>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
+                    <q-item-section>
+                        Agendamento
+                    </q-item-section>
+                </q-item>
+            </q-list>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+            <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
+                <div class="absolute-bottom bg-transparent">
+                    <q-avatar size="56px" class="q-mb-sm">
+                        <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+                    </q-avatar>
+                    <div class="text-weight-bold">Fulano de tal</div>
+                </div>
+            </q-img>
+        </q-drawer>
+
+        <q-page-container style="margin: 10px 0 0 10px;" :key="route.path">
+            <q-breadcrumbs>
+                <q-breadcrumbs-el label="Início" icon="home" :to="{ name: 'home' }"/>
+
+                <q-breadcrumbs-el
+                    v-for="route in routeBreadcrumbs"
+                    :key="route.label"
+                    :label="route.label"
+                    :icon="route.icon"
+                    :to="route.to"
+                />
+            </q-breadcrumbs>
+            <router-view/>
+        </q-page-container>
+    </q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { computed, defineComponent, ref } from 'vue'
+import {
+    RouteRecordNormalized,
+    useRoute,
+    RouteLocationRaw
+} from 'vue-router'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+type BreadcrumbRouteEl = {
+    label: string
+    icon?: string,
+    to?: RouteLocationRaw,
+
+}
+
+function routeBreadcrumbs(): BreadcrumbRouteEl[] {
+    return useRoute().matched
+        .filter((matchedRoute: RouteRecordNormalized): boolean => !!matchedRoute.meta.title)
+        .map((matchedRoute: RouteRecordNormalized): BreadcrumbRouteEl => {
+            return {
+                label: matchedRoute.meta.title,
+                icon: matchedRoute.meta.icon,
+                to: { name: matchedRoute.name }
+            }
+        })
+}
 
 export default defineComponent({
-  name: 'MainLayout',
+    name: 'MainLayout',
 
-  components: {
-    EssentialLink
-  },
+    setup() {
+        const leftDrawerOpen = ref(false)
+        const route = useRoute()
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+        return {
+            leftDrawerOpen,
+            toggleLeftDrawer() {
+                leftDrawerOpen.value = !leftDrawerOpen.value
+            },
 
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+            routeBreadcrumbs: computed<BreadcrumbRouteEl[]>(routeBreadcrumbs),
+            route,
+        }
+    },
+    created() {
+        console.log(useRoute().matched)
     }
-  }
 })
 </script>

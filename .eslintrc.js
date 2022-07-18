@@ -64,6 +64,14 @@ module.exports = {
 
     // add your custom rules here
     rules: {
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        'space-before-function-paren': 'off',
         'comma-dangle': 'off',
         // allow async-await
         'generator-star-spacing': 'off',
