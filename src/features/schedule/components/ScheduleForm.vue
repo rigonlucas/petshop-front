@@ -7,11 +7,9 @@
         header-nav
     >
         <q-step title="Selecione o cliente" :name="STEPS.STEP_CLIENT_SELECT">
-            <q-input
-                :model-value="props.name"
-                @change="emit('update:name', $event)"
-                label="Nome"
-                outlined
+            <schedule-client-form
+                :client="props.client"
+                @update:client="emit('update:client', $event)"
             />
         </q-step>
         <q-step title="Selecione o serviço" :name="STEPS.STEP_SERVICE_SELECT">
@@ -44,6 +42,8 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue'
+import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
+import { QSelectOption } from 'quasar'
 
 enum STEPS {
     STEP_CLIENT_SELECT = 1,
@@ -53,11 +53,11 @@ enum STEPS {
 }
 
 interface Props {
-    name: string
+    client: QSelectOption
 }
 const props = defineProps<Props>()
 export interface Emits {
-    (event: 'update:name', value: string): void
+    (event: 'update:client', value: QSelectOption): void
 }
 const emit = defineEmits<Emits>()
 

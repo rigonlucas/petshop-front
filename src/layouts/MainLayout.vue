@@ -113,8 +113,5 @@ export default defineComponent({
             route,
         }
     },
-    created() {
-        console.log(useRoute().matched)
-    }
 })
 </script>

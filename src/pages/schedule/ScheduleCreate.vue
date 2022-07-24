@@ -10,7 +10,7 @@
 
                 <div class="row" style="padding-top: 10px">
                     <schedule-form
-                        v-model:name="formData.name"
+                        v-model:client="formData.client"
                     />
                 </div>
             </q-card-section>
@@ -35,7 +35,7 @@ function handleHide() {
 }
 
 const formData: FormData = reactive({
-    name: ''
+    client: null
 })
 
 </script>

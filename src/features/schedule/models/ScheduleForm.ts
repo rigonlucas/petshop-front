@@ -1,3 +1,5 @@
+import { QSelectOption } from 'quasar'
+
 export interface FormData {
-    name: string,
+    client: QSelectOption | null,
 }
