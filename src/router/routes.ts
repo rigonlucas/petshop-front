@@ -2,7 +2,6 @@ import { RouteRecordRaw } from 'vue-router'
 
 declare module 'vue-router' {
     interface RouteMeta {
-        // is optional
         title: string
         icon?: string
     }
@@ -22,11 +21,18 @@ const routes: RouteRecordRaw[] = [
             {
                 name: 'schedule.index',
                 path: '',
-                component: () => import('pages/schedule/IndexPage.vue'),
+                component: () => import('pages/schedule/ScheduleIndex.vue'),
                 meta: {
                     title: 'Agendamento',
                     icon: 'calendar_today',
                 },
+                children: [
+                    {
+                        name: 'schedule.create',
+                        path: 'novo',
+                        component: () => import('pages/schedule/ScheduleCreate.vue'),
+                    }
+                ],
             },
         ],
     },

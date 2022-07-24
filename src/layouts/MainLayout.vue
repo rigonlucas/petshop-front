@@ -16,6 +16,13 @@
                 </q-toolbar-title>
             </q-toolbar>
         </q-header>
+        <q-ajax-bar
+            ref="bar"
+            position="top"
+            color="blue"
+            size="5px"
+            skip-hijack
+        />
 
         <q-drawer
             v-model="leftDrawerOpen"
@@ -45,7 +52,7 @@
             </q-img>
         </q-drawer>
 
-        <q-page-container style="margin: 10px 0 0 10px;" :key="route.path">
+        <q-page-container class="q-ma-md" :key="route.path">
             <q-breadcrumbs>
                 <q-breadcrumbs-el label="Início" icon="home" :to="{ name: 'home' }"/>
 
