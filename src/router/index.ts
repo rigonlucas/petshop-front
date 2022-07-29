@@ -3,10 +3,11 @@ import {
     createMemoryHistory,
     createRouter,
     createWebHashHistory,
-    createWebHistory,
+    createWebHistory, RouteRecordNormalized,
 } from 'vue-router'
 
 import routes from './routes'
+import { useAuthStore } from 'stores/auth-store'
 
 /*
  * If not building with SSR mode, you can
@@ -30,6 +31,37 @@ export default route(function (/* { store, ssrContext } */) {
         // quasar.conf.js -> build -> vueRouterMode
         // quasar.conf.js -> build -> publicPath
         history: createHistory(process.env.VUE_ROUTER_BASE),
+    })
+
+    function getInheritanceMetaAttribute(attribute: string, routes: RouteRecordNormalized[]) {
+        return routes.reduce((acc: any, route: RouteRecordNormalized) => {
+            if (attribute in route.meta) {
+                return route.meta[attribute]
+            }
+
+            return acc
+        }, false)
+    }
+
+    Router.beforeEach((to, from, next) => {
+        const authStore = useAuthStore()
+        const isAuthenticated = authStore.isAuthenticated
+        const isProtectedRoute = getInheritanceMetaAttribute('isProtected', to.matched)
+        const isOnlyGuestRoute = getInheritanceMetaAttribute('onlyGuest', to.matched)
+
+        if (isOnlyGuestRoute && isAuthenticated) {
+            return next(from || { name: 'home' })
+        }
+
+        if (!isProtectedRoute) {
+            return next()
+        }
+
+        if (isAuthenticated) {
+            return next()
+        }
+
+        return next({ name: 'auth.login' })
     })
 
     return Router

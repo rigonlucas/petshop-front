@@ -2,9 +2,9 @@ import { api } from 'boot/axios'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 // import { AxiosResponse } from 'axios'
 
-// interface ServerResponse {
-//     data: ClientModel[]
-// }
+interface ServerResponse {
+    data: ClientModel[]
+}
 
 export async function list(params: any): Promise<ClientModel[]> {
     const {

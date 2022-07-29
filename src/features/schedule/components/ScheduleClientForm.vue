@@ -8,7 +8,6 @@
         use-input
         input-debounce="200"
         @filter="handleFilterClient"
-        @virtual-scroll="handleOnScroll"
     />
 </template>
 
