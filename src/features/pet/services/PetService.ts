@@ -1,6 +1,5 @@
 import { api } from 'boot/axios'
 import { ClientModel } from 'src/features/client/models/ClientModel'
-// import { AxiosResponse } from 'axios'
 
 interface MetaResponse {
     current_page: number
@@ -15,7 +14,7 @@ export interface PaginatedServerResponse<DataT> {
 }
 
 export async function list(params: any): Promise<PaginatedServerResponse<ClientModel>> {
-    const response = await api.get<PaginatedServerResponse<ClientModel>>('clients', { params: { ...params } })
+    const response = await api.get<PaginatedServerResponse<ClientModel>>('pets', { params: { ...params } })
 
     return response.data
 }

@@ -5,37 +5,39 @@
                 <h3>Login</h3>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <q-input
-                    v-model="form.email"
-                    label="Email"
-                    outlined
-                />
+        <form @submit.prevent="handleLogin">
+            <div class="row">
+                <div class="col">
+                    <q-input
+                        v-model="form.email"
+                        label="Email"
+                        outlined
+                    />
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col q-mt-sm">
-                <q-input
-                    v-model="form.password"
-                    label="Senha"
-                    type="password"
-                    outlined
-                />
+            <div class="row">
+                <div class="col q-mt-sm">
+                    <q-input
+                        v-model="form.password"
+                        label="Senha"
+                        type="password"
+                        outlined
+                    />
+                </div>
             </div>
-        </div>
-        <div class="row q-mt-xs justify-end">
-            <div class="col text-right">
-                <router-link :to="{ name: 'auth.forgot' }">
-                    Enqueci minha senha
-                </router-link>
+            <div class="row q-mt-xs justify-end">
+                <div class="col text-right">
+                    <router-link :to="{ name: 'auth.forgot' }">
+                        Enqueci minha senha
+                    </router-link>
+                </div>
             </div>
-        </div>
-        <div class="row q-mt-sm">
-            <div class="col">
-                <q-btn color="primary" class="full-width" @click="handleLogin">Entrar</q-btn>
+            <div class="row q-mt-sm">
+                <div class="col">
+                    <q-btn color="primary" class="full-width" type="submit">Entrar</q-btn>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 

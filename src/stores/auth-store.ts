@@ -32,5 +32,11 @@ export const useAuthStore = defineStore('auth', {
             this.token = token
             LocalStorage.set('auth-token', token)
         },
+        clearUserSession() {
+            this.user = null
+            this.token = null
+            LocalStorage.clear()
+            this.router.push({ name: 'auth.login' })
+        }
     },
 })

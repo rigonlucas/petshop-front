@@ -9,9 +9,7 @@
                 <q-separator/>
 
                 <div class="row" style="padding-top: 10px">
-                    <schedule-form
-                        v-model:client="formData.client"
-                    />
+                    <schedule-form />
                 </div>
             </q-card-section>
 
@@ -33,9 +31,5 @@ const router = useRouter()
 function handleHide() {
     router.push({ name: 'schedule.index' })
 }
-
-const formData: FormData = reactive({
-    client: null
-})
 
 </script>
