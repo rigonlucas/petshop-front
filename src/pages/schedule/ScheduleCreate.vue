@@ -2,8 +2,9 @@
     <q-dialog
         :model-value="true"
         @hide="handleHide"
+        full-width
     >
-        <q-card style="width: 700px; max-width: 80vw;">
+        <q-card style="height: 90vh;">
             <q-card-section>
                 <div class="text-h6">Novo agendamento</div>
                 <q-separator/>

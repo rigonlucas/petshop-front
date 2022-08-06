@@ -76,6 +76,7 @@ import {
     useRoute,
     RouteLocationRaw
 } from 'vue-router'
+import { useAuthStore } from 'stores/auth-store'
 
 type BreadcrumbRouteEl = {
     label: string
@@ -89,7 +90,7 @@ function routeBreadcrumbs(): BreadcrumbRouteEl[] {
         .filter((matchedRoute: RouteRecordNormalized): boolean => !!matchedRoute.meta.title)
         .map((matchedRoute: RouteRecordNormalized): BreadcrumbRouteEl => {
             return {
-                label: matchedRoute.meta.title,
+                label: matchedRoute.meta.title ?? '',
                 icon: matchedRoute.meta.icon,
                 to: { name: matchedRoute.name }
             }
@@ -102,7 +103,8 @@ export default defineComponent({
     setup() {
         const leftDrawerOpen = ref(false)
         const route = useRoute()
-
+        const authStore = useAuthStore()
+        authStore.checkSession()
         return {
             leftDrawerOpen,
             toggleLeftDrawer() {

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { LocalStorage } from 'quasar'
+import { api } from 'boot/axios'
 
 interface UserModel {
     id: number,
@@ -24,6 +25,13 @@ export const useAuthStore = defineStore('auth', {
         },
     },
     actions: {
+        async checkSession() {
+            try {
+                await api.get('/user')
+            } catch (e) {
+                this.clearUserSession()
+            }
+        },
         setUser(user: UserModel) {
             this.user = user
             LocalStorage.set('auth-user', user)

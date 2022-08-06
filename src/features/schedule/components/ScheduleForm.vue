@@ -7,7 +7,7 @@
         header-nav
         style="width: 100%;"
     >
-        <q-step title="Selecione o cliente" :name="STEPS.STEP_CLIENT_SELECT">
+        <q-step :title="`Selecione o cliente ${clientHeaderLabel}`" :name="STEPS.STEP_CLIENT_SELECT">
             <schedule-client-form
                 v-model:client="formData.client"
                 v-model:pet="formData.pet"
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref, reactive } from 'vue'
+import { defineEmits, ref, reactive, computed } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
 import { QSelectOption } from 'quasar'
 import { FormData } from 'src/features/schedule/models/ScheduleForm'
@@ -54,11 +54,7 @@ enum STEPS {
     STEP_PRODUCTS = 4,
 }
 
-// interface Props {
-//
-// }
-// const props = defineProps<Props>()
-export interface Emits {
+interface Emits {
     (event: 'update:client', value: QSelectOption): void
 }
 const emit = defineEmits<Emits>()
@@ -69,6 +65,14 @@ const formData: FormData = reactive({
 })
 
 const step = ref<STEPS>(STEPS.STEP_CLIENT_SELECT)
+
+const clientHeaderLabel = computed<string>(() => {
+    if (!formData.client || !formData.pet) {
+        return ''
+    }
+
+    return `- ${formData.client.label.toUpperCase()} - ${formData.pet.label.toUpperCase()}`
+})
 
 </script>
 
