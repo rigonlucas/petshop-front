@@ -1,6 +1,6 @@
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
 import { QSelectOption } from 'quasar'
-import ClientService, { PaginatedServerResponse } from 'src/features/client/services/ClientService'
+import { PaginatedServerResponse } from 'src/features/client/services/ClientService'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 
 export interface DetailedSelectOption<Ts> extends QSelectOption<number> {

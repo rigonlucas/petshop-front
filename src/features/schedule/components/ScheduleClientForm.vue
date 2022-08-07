@@ -1,5 +1,5 @@
 <template>
-    <div class="flex">
+    <div class="flex" style="gap: 10px;">
         <q-select
             :model-value="props.client"
             @update:model-value="handleClientSelect"
@@ -11,7 +11,7 @@
             @filter="handleClientsFilter"
             @virtual-scroll="handleClientsOnScroll"
             :loading="IsLoadingClients"
-            style="width: 50%"
+            style="flex-grow: 1;"
         >
             <template #no-option>
                 Nenhum cliente encontrado
@@ -28,7 +28,7 @@
             @filter="handlePetsFilter"
             @virtual-scroll="handlePetsOnScroll"
             :loading="IsLoadingPets"
-            style="width: 50%"
+            style="flex-grow: 1;"
         >
             <template #no-option>
                 <q-item style="align-items: center; justify-content: space-between; gap: 10px;">
@@ -49,15 +49,14 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 import ClientService from 'src/features/client/services/ClientService'
-import { QSelectOption } from 'quasar'
-import useSelectAjaxOptions, { DetailedSelectOption } from 'src/composables/useSelectAjaxOptions'
+import useSelectAjaxOptions, { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
 import PetService from 'src/features/pet/services/PetService'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 
 interface Props {
-    client?: QSelectOption
-    pet?: QSelectOption
+    client?: DetailedSelectOption<ClientModel>
+    pet?: DetailedSelectOption<PetModel>
 }
 
 const props = defineProps<Props>()

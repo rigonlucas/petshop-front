@@ -2,15 +2,14 @@
     <q-dialog
         :model-value="true"
         @hide="handleHide"
-        full-width
     >
-        <q-card style="height: 90vh;">
+        <q-card style="min-width: 50vw;">
             <q-card-section>
                 <div class="text-h6">Novo agendamento</div>
                 <q-separator/>
 
-                <div class="row" style="padding-top: 10px">
-                    <schedule-form />
+                <div class="row">
+                    <schedule-form class="q-py-none"/>
                 </div>
             </q-card-section>
 
