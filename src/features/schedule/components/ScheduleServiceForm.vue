@@ -1,36 +1,29 @@
 <template>
     <div class="row q-col-gutter-sm">
         <div class="q-pt-sm col-12 col-md-8">
-            <q-select
+            <base-select
                 :model-value="props.type"
                 @update:model-value="(e) => emit('update:type', e)"
-                @filter="onFilterTypes"
                 label="Tipo do serviço"
-                :options="filteredTypeOptions"
-                outlined
-                use-input
-                input-debounce="0"
+                :options="typesOptions"
             />
         </div>
         <div class="q-pt-sm col-12 col-md-4">
-            <q-select
+            <base-select
                 :model-value="props.duration"
                 @input-value="handleInput"
                 label="Duração"
-                :options="[15, 30, 45, 60]"
-                hide-selected
+                :options="primitivesToQSelectOptions([15, 30, 45, 60])"
                 :stack-label="!!props.duration"
-                outlined
-                use-input
+                hide-selected
                 fill-input
-                input-debounce="0"
             >
                 <template #option="scope">
-                    <q-item v-bind="scope.itemProps" style="align-items: center; justify-content: space-between; gap: 10px;">
-                        <q-item-label>{{ scope.opt }} minutos</q-item-label>
+                    <q-item v-bind="scope.itemProps" style="align-items: center;">
+                        <q-item-label>{{ scope.opt.label }} minutos</q-item-label>
                     </q-item>
                 </template>
-            </q-select>
+            </base-select>
         </div>
     </div>
     <div class="row q-col-gutter-sm q-pt-sm">
@@ -92,13 +85,7 @@
                 @filter="handleUsersFilter"
                 @virtual-scroll="handleUsersOnScroll"
                 :loading="isLoadingUsers"
-            >
-                <template #no-option>
-                    <q-item style="align-items: center;">
-                        Nenhum usuário encontrado
-                    </q-item>
-                </template>
-            </q-select>
+            />
         </div>
     </div>
 </template>
@@ -108,9 +95,10 @@ import { defineProps, defineEmits } from 'vue'
 import useSelectAjaxOptions, { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
 import useLabelToOptions from 'src/composables/select/useLabelToOptions'
 import { ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleForm'
-import useBasicSelectFilter from 'src/composables/select/useBasicSelectFilter'
 import UserModel from 'src/features/user/models/UserModel'
 import UserService from 'src/features/user/services/UserService'
+import BaseSelect from 'components/Select/BaseSelect.vue'
+import useHelpers from 'src/composables/select/useHelpers'
 
 interface Props {
     type?: DetailedSelectOption<null>
@@ -130,11 +118,8 @@ interface Emits {
 
 const emit = defineEmits<Emits>()
 
+const { primitivesToQSelectOptions } = useHelpers()
 const typesOptions = useLabelToOptions(ScheduleTypesLabels)
-const {
-    onFilter: onFilterTypes,
-    filteredOptions: filteredTypeOptions,
-} = useBasicSelectFilter(typesOptions)
 
 function handleInput(value: number) {
     if (isNaN(value)) {

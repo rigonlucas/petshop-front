@@ -1,9 +1,9 @@
 import { QSelectOption } from 'quasar'
 import { ref } from 'vue'
 
-export default function useBasicSelectFilter(options: QSelectOption[]) {
+export default function useBasicSelectFilter(options: QSelectOption<string|number>[]) {
     const filteredOptions = ref(options)
-    function onFilter(value: string, update: any) {
+    function handleFilterOptions(value: string, update: any) {
         if (!value) {
             update(() => {
                 filteredOptions.value = options
@@ -15,5 +15,5 @@ export default function useBasicSelectFilter(options: QSelectOption[]) {
             filteredOptions.value = options.filter((option) => option.label.toLowerCase().indexOf(needle) > -1)
         })
     }
-    return { onFilter, filteredOptions }
+    return { handleFilterOptions, filteredOptions }
 }
