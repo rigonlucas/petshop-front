@@ -1,6 +1,7 @@
 import { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
+import UserModel from 'src/features/user/models/UserModel'
 
 export enum ScheduleTypes {
     VETERINARIAN = 1,
@@ -21,4 +22,6 @@ export interface FormData {
     pet: DetailedSelectOption<PetModel> | null,
     type: ScheduleTypes | null,
     duration: number | null,
+    datetime: string | null,
+    user: UserModel | null,
 }

@@ -10,20 +10,46 @@
         <template #message>
             <q-banner
                 v-if="formData.client && formData.pet"
-                transition-show="slide-up"
-                class="bg-primary text-white"
+                class="bg-primary text-white preview-banner"
             >
-                <div class="text-h6">
-                    <q-icon name="person" />
-                    <span>{{ formData.client.details.name }}</span>
-                </div>
-                <div class="text-h6">
-                    <q-icon name="call" />
-                    <span>{{ formData.client.details.phone }}</span>
-                </div>
-                <div class="text-h6">
-                    <q-icon name="pets" />
-                    <span>{{ formData.pet.details.name }}</span>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="text-h6">
+                            <q-icon name="person" />
+                            <span>{{ formData.client.details.name }}</span>
+                        </div>
+                        <div class="text-h6">
+                            <q-icon name="call" />
+                            <span>{{ formData.client.details.phone }}</span>
+                        </div>
+                        <div class="text-h6">
+                            <q-icon name="pets" />
+                            <span>{{ formData.pet.details.name }}</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div
+                            v-if="formData.user"
+                            class="text-h6"
+                        >
+                            <q-icon name="badge" />
+                            <span>{{ formData.user.details.name }}</span>
+                        </div>
+                        <div
+                            v-if="formData.type"
+                            class="text-h6"
+                        >
+                            <q-icon name="design_services" />
+                            <span>{{ formData.type.label }}</span>
+                        </div>
+                        <div
+                            v-if="formData.datetime"
+                            class="text-h6"
+                        >
+                            <q-icon name="event" />
+                            <span>{{ formData.datetime }}</span>
+                        </div>
+                    </div>
                 </div>
             </q-banner>
         </template>
@@ -53,6 +79,8 @@
             <schedule-service-form
                 v-model:type="formData.type"
                 v-model:duration="formData.duration"
+                v-model:datetime="formData.datetime"
+                v-model:user="formData.user"
             />
         </q-step>
         <q-step
@@ -84,9 +112,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref, reactive, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
-import { QSelectOption } from 'quasar'
 import { FormData } from 'src/features/schedule/models/ScheduleForm'
 import ScheduleServiceForm from 'src/features/schedule/components/ScheduleServiceForm.vue'
 
@@ -102,14 +129,24 @@ const formData: FormData = reactive({
     pet: null,
     type: null,
     duration: null,
+    datetime: '08/08/2022',
+    user: null,
 })
 
 const step = ref<STEPS>(STEPS.STEP_CLIENT_SELECT)
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+:deep(.preview-banner) {
+    i {
+        margin-right: 5px;
+    }
+}
 :deep(.q-stepper__tab) {
     padding-left: 5px !important;
+}
+:deep(.q-stepper__step-inner) {
+    padding-left: 30px;
 }
 </style>

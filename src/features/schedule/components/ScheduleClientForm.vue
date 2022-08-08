@@ -1,48 +1,52 @@
 <template>
-    <div class="flex" style="gap: 10px;">
-        <q-select
-            :model-value="props.client"
-            @update:model-value="handleClientSelect"
-            label="Cliente"
-            :options="clientsOptions"
-            outlined
-            use-input
-            input-debounce="200"
-            @filter="handleClientsFilter"
-            @virtual-scroll="handleClientsOnScroll"
-            :loading="IsLoadingClients"
-            style="flex-grow: 1;"
-        >
-            <template #no-option>
-                Nenhum cliente encontrado
-            </template>
-        </q-select>
-        <q-select
-            :model-value="props.pet"
-            @update:model-value="handleSelectPet"
-            label="Pet"
-            :options="petsOptions"
-            outlined
-            use-input
-            input-debounce="200"
-            @filter="handlePetsFilter"
-            @virtual-scroll="handlePetsOnScroll"
-            :loading="IsLoadingPets"
-            style="flex-grow: 1;"
-        >
-            <template #no-option>
-                <q-item style="align-items: center; justify-content: space-between; gap: 10px;">
-                    Nenhum pet encontrado
-                </q-item>
-            </template>
+    <div class="row q-col-gutter-sm">
+        <div class="col-12 col-md-6">
+            <q-select
+                :model-value="props.client"
+                @update:model-value="handleClientSelect"
+                label="Cliente"
+                :options="clientsOptions"
+                outlined
+                use-input
+                input-debounce="200"
+                @filter="handleClientsFilter"
+                @virtual-scroll="handleClientsOnScroll"
+                :loading="IsLoadingClients"
+                style="flex-grow: 1;"
+            >
+                <template #no-option>
+                    Nenhum cliente encontrado
+                </template>
+            </q-select>
+        </div>
+        <div class="col-12 col-md-6">
+            <q-select
+                :model-value="props.pet"
+                @update:model-value="handleSelectPet"
+                label="Pet"
+                :options="petsOptions"
+                outlined
+                use-input
+                input-debounce="200"
+                @filter="handlePetsFilter"
+                @virtual-scroll="handlePetsOnScroll"
+                :loading="IsLoadingPets"
+                style="flex-grow: 1;"
+            >
+                <template #no-option>
+                    <q-item style="align-items: center; justify-content: space-between; gap: 10px;">
+                        Nenhum pet encontrado
+                    </q-item>
+                </template>
 
-            <template #option="scope">
-                <q-item v-bind="scope.itemProps" style="align-items: center; justify-content: space-between; gap: 10px;">
-                    <q-item-label>{{ scope.opt.label }}</q-item-label>
-                    <q-item-label caption>{{ scope.opt.details.client.name }}</q-item-label>
-                </q-item>
-            </template>
-        </q-select>
+                <template #option="scope">
+                    <q-item v-bind="scope.itemProps" style="align-items: center; gap: 10px;">
+                        <q-item-label>{{ scope.opt.label }}</q-item-label>
+                        <q-item-label caption>{{ scope.opt.details.client.name }}</q-item-label>
+                    </q-item>
+                </template>
+            </q-select>
+        </div>
     </div>
 </template>
 

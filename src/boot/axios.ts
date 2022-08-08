@@ -19,15 +19,13 @@ api.interceptors.request.use(request => {
 })
 
 api.interceptors.response.use(response => {
-    console.log('bbbb')
-
     return response
 }, (error) => {
     const authStore = useAuthStore()
     if (!axios.isAxiosError(error)) {
         return Promise.reject(error)
     }
-    console.log(error.response)
+
     if (error.response?.status === 401) {
         authStore.clearUserSession()
     }
