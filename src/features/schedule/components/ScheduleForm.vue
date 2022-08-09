@@ -88,12 +88,12 @@
             :name="STEPS.STEP_OTHER_INFOS"
             @focus.capture="step = STEPS.STEP_OTHER_INFOS"
         >
-<!--            <q-input-->
-<!--                :model-value="props.name"-->
-<!--                @change="emit('update:name', $event)"-->
-<!--                label="Nome"-->
-<!--                outlined-->
-<!--            />-->
+            <q-input
+                filled
+                type="textarea"
+                placeholder="Observação"
+                v-model="formData.observation"
+            />
         </q-step>
         <q-step
             title="Produtos/Serviços"
@@ -116,6 +116,7 @@ import { ref, reactive } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
 import { FormData } from 'src/features/schedule/models/ScheduleForm'
 import ScheduleServiceForm from 'src/features/schedule/components/ScheduleServiceForm.vue'
+import { format } from 'date-fns'
 
 enum STEPS {
     STEP_CLIENT_SELECT = 1,
@@ -129,8 +130,9 @@ const formData: FormData = reactive({
     pet: null,
     type: null,
     duration: null,
-    datetime: '08/08/2022',
+    datetime: format(new Date(), 'dd/MM/yyyy HH:mm'),
     user: null,
+    observation: null,
 })
 
 const step = ref<STEPS>(STEPS.STEP_CLIENT_SELECT)

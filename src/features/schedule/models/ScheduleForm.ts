@@ -24,4 +24,5 @@ export interface FormData {
     duration: number | null,
     datetime: string | null,
     user: UserModel | null,
+    observation: string | null,
 }

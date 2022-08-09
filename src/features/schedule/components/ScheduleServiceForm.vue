@@ -74,17 +74,11 @@
             </q-input>
         </div>
         <div class="col-12 col-md-8">
-            <q-select
+            <base-async-select
                 :model-value="props.user"
                 @update:model-value="handleSelectUser"
                 label="Profissional"
-                :options="usersOptions"
-                outlined
-                use-input
-                input-debounce="200"
-                @filter="handleUsersFilter"
-                @virtual-scroll="handleUsersOnScroll"
-                :loading="isLoadingUsers"
+                :fetch-callback="fetchUsersCallback"
             />
         </div>
     </div>
@@ -92,13 +86,15 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
-import useSelectAjaxOptions, { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
+import { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
 import useLabelToOptions from 'src/composables/select/useLabelToOptions'
 import { ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleForm'
 import UserModel from 'src/features/user/models/UserModel'
-import UserService from 'src/features/user/services/UserService'
 import BaseSelect from 'components/Select/BaseSelect.vue'
 import useHelpers from 'src/composables/select/useHelpers'
+import BaseAsyncSelect from 'components/Select/BaseAsyncSelect.vue'
+import ScheduleService from 'src/features/schedule/services/ScheduleService'
+import { format, parse } from 'date-fns'
 
 interface Props {
     type?: DetailedSelectOption<null>
@@ -118,24 +114,26 @@ interface Emits {
 
 const emit = defineEmits<Emits>()
 
-const { primitivesToQSelectOptions } = useHelpers()
+const { primitivesToQSelectOptions } = useHelpers<number>()
 const typesOptions = useLabelToOptions(ScheduleTypesLabels)
-
-function handleInput(value: number) {
-    if (isNaN(value)) {
+function handleInput(value: string) {
+    const valueAsNumber = Number(value)
+    if (isNaN(valueAsNumber)) {
         return
     }
-    emit('update:duration', value)
+
+    emit('update:duration', valueAsNumber)
 }
 
-const {
-    options: usersOptions,
-    handleFilter: handleUsersFilter,
-    handleOnScroll: handleUsersOnScroll,
-    isLoading: isLoadingUsers,
-} = useSelectAjaxOptions<UserModel>(async (input, page) => {
-    return await UserService.list({ name: input, page })
-})
+const fetchUsersCallback = async (input: string, page: number) => {
+    if (!props.datetime || !props.duration) {
+        return
+    }
+    const parsedDate = parse(props.datetime, 'dd/MM/yyyy HH:mm', new Date())
+    console.log(parsedDate)
+    return await ScheduleService.listAvailableProfessionals({ date_time: format(parsedDate, 'yyyy-MM-dd HH:mm'), duration: props.duration }, page)
+}
+
 function handleSelectUser(user: UserModel) {
     emit('update:user', user)
 }

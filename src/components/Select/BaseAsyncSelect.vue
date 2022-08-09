@@ -2,10 +2,12 @@
     <q-select
         outlined
         use-input
-        input-debounce="0"
-        @filter="handleFilterOptions"
+        input-debounce="200"
+        @filter="handleFilter"
+        @virtual-scroll="handleOnScroll"
+        :loading="isLoading"
         v-bind="$attrs"
-        :options="filteredOptions"
+        :options="options"
     >
         <template #no-option="scope">
             <slot name="no-option" v-bind="scope">
@@ -32,18 +34,21 @@ export default {
 </script>
 <script setup lang="ts">
 import { defineProps } from 'vue/dist/vue'
-import { QSelectOption, QSelectProps } from 'quasar'
-import useBasicSelectFilter from 'src/composables/select/useBasicSelectFilter'
+import { QSelectProps } from 'quasar'
+import useSelectAjaxOptions from 'src/composables/select/useSelectAjaxOptions'
+import { PaginatedServerResponse } from 'src/models/ApiModels'
 
 interface Props extends QSelectProps {
-    options: QSelectOption[]
+    fetchCallback: (input: string, page: number) => Promise<PaginatedServerResponse<any>>
 }
-
 const props = defineProps<Props>()
+
 const {
-    handleFilterOptions,
-    filteredOptions,
-} = useBasicSelectFilter(props.options)
+    options,
+    handleFilter,
+    handleOnScroll,
+    isLoading,
+} = useSelectAjaxOptions<any>(props.fetchCallback)
 
 </script>
 

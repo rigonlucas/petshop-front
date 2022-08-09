@@ -23,6 +23,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import '@fullcalendar/core/vdom'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'

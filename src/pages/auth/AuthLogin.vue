@@ -11,6 +11,7 @@
                     <q-input
                         v-model="form.email"
                         label="Email"
+                        type="email"
                         outlined
                     />
                 </div>

@@ -7,8 +7,15 @@ export interface WorkerModel {
     name: string,
 }
 
-export async function listAvailableWorkers(params: any): Promise<PaginatedServerResponse<WorkerModel>> {
-    const response = await api.get<PaginatedServerResponse<ClientModel>>('clients', { params: { ...params } })
+export async function listAvailableProfessionals(params: {
+    date_time: string
+    duration: number
+}, page: number): Promise<PaginatedServerResponse<WorkerModel>> {
+    const response = await api.get<PaginatedServerResponse<ClientModel>>('schedules/professionals/available', { params: { ...params, page } })
 
     return response.data
+}
+
+export default {
+    listAvailableProfessionals,
 }
