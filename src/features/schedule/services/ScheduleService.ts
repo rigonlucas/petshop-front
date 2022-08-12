@@ -16,6 +16,22 @@ export async function listAvailableProfessionals(params: {
     return response.data
 }
 
+interface CreateInput {
+    client_id: number
+    pet_id: number
+    user_id: number
+    type: number
+    start_at: number
+    datetime: string
+    description?: string
+}
+export async function create(data: CreateInput) {
+    const response = await api.post('schedule', data)
+
+    return response.data
+}
+
 export default {
     listAvailableProfessionals,
+    create,
 }

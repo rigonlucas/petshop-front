@@ -1,5 +1,5 @@
 <template>
-    <div class="row q-col-gutter-sm">
+    <div class="row q-col-gutter-sm q-py-sm">
         <div class="col-12 col-md-6">
             <base-async-select
                 :model-value="props.client"

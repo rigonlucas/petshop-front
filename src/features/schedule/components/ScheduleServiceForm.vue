@@ -3,7 +3,7 @@
         <div class="q-pt-sm col-12 col-md-8">
             <base-select
                 :model-value="props.type"
-                @update:model-value="(e) => emit('update:type', e)"
+                @update:model-value="handleTypeSelect"
                 label="Tipo do serviço"
                 :options="typesOptions"
             />
@@ -11,7 +11,7 @@
         <div class="q-pt-sm col-12 col-md-4">
             <base-select
                 :model-value="props.duration"
-                @input-value="handleInput"
+                @input-value="handleDurationInput"
                 label="Duração"
                 :options="primitivesToQSelectOptions([15, 30, 45, 60])"
                 :stack-label="!!props.duration"
@@ -29,9 +29,10 @@
     <div class="row q-col-gutter-sm q-pt-sm">
         <div class="col-12 col-md-4">
             <q-input
-                :model-value="datetime"
-                @update:model-value="emit('update:datetime', $event)"
+                :model-value="start_at"
+                @update:model-value="emit('update:start_at', $event)"
                 outlined
+                :rules="[val => !!val || 'Field is required']"
             >
                 <template #prepend>
                     <q-btn
@@ -41,8 +42,8 @@
                     >
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                             <q-date
-                                :model-value="datetime"
-                                @update:model-value="emit('update:datetime', $event)"
+                                :model-value="start_at"
+                                @update:model-value="emit('update:start_at', $event)"
                                 mask="DD/MM/YYYY HH:mm"
                             >
                                 <div class="row items-center justify-end">
@@ -60,8 +61,8 @@
                     >
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                             <q-time
-                                :model-value="datetime"
-                                @update:model-value="emit('update:datetime', $event)"
+                                :model-value="start_at"
+                                @update:model-value="emit('update:start_at', $event)"
                                 mask="DD/MM/YYYY HH:mm"
                             >
                                 <div class="row items-center justify-end">
@@ -95,28 +96,28 @@ import useHelpers from 'src/composables/select/useHelpers'
 import BaseAsyncSelect from 'components/Select/BaseAsyncSelect.vue'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import { format, parse } from 'date-fns'
+import { QSelectOption } from 'quasar'
 
 interface Props {
-    type?: DetailedSelectOption<null>
+    type?: DetailedSelectOption<number>
     duration?: number
-    datetime?: string
+    start_at?: string
     user?: UserModel
 }
 
 const props = defineProps<Props>()
 
 interface Emits {
-    (event: 'update:type', value: DetailedSelectOption<null> | null): void
+    (event: 'update:type', value: DetailedSelectOption<number> | null): void
     (event: 'update:duration', value: number | null): void
-    (event: 'update:datetime', value: string | null): void
+    (event: 'update:start_at', value: string | null): void
     (event: 'update:user', value: UserModel | null): void
 }
-
 const emit = defineEmits<Emits>()
 
 const { primitivesToQSelectOptions } = useHelpers<number>()
 const typesOptions = useLabelToOptions(ScheduleTypesLabels)
-function handleInput(value: string) {
+function handleDurationInput(value: string) {
     const valueAsNumber = Number(value)
     if (isNaN(valueAsNumber)) {
         return
@@ -126,16 +127,21 @@ function handleInput(value: string) {
 }
 
 const fetchUsersCallback = async (input: string, page: number) => {
-    if (!props.datetime || !props.duration) {
+    if (!props.start_at || !props.duration) {
         return
     }
-    const parsedDate = parse(props.datetime, 'dd/MM/yyyy HH:mm', new Date())
+    const parsedDate = parse(props.start_at, 'dd/MM/yyyy HH:mm', new Date())
     console.log(parsedDate)
     return await ScheduleService.listAvailableProfessionals({ date_time: format(parsedDate, 'yyyy-MM-dd HH:mm'), duration: props.duration }, page)
 }
 
 function handleSelectUser(user: UserModel) {
     emit('update:user', user)
+}
+
+function handleTypeSelect(selectOption: QSelectOption<number>) {
+    selectOption.value = Number(selectOption.value)
+    emit('update:type', selectOption)
 }
 </script>
 

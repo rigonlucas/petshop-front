@@ -10,12 +10,27 @@
                 <q-separator/>
 
                 <div class="row">
-                    <schedule-form class="q-py-none"/>
+                    <div class="col">
+                        <schedule-form
+                            class="q-py-none"
+                            @submiting="isSubmiting = true"
+                            @success="isSubmiting = false"
+                            @error="isSubmiting = false"
+                        />
+                    </div>
                 </div>
             </q-card-section>
 
             <q-card-actions class="bg-white text-teal" align="right">
-                <q-btn color="primary">Salvar</q-btn>
+                <q-btn
+                    color="primary"
+                    type="submit"
+                    form="schedule-form"
+                    :loading="isSubmiting"
+                    :disable="isSubmiting"
+                >
+                    Salvar
+                </q-btn>
                 <q-btn v-close-popup>Cancelar</q-btn>
             </q-card-actions>
         </q-card>
@@ -25,12 +40,15 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
+import { ref } from 'vue'
 
 const router = useRouter()
 
 function handleHide() {
     router.push({ name: 'schedule.index' })
 }
+
+const isSubmiting = ref(false)
 
 </script>
 
