@@ -14,6 +14,12 @@
                 <q-toolbar-title>
                     Petshop
                 </q-toolbar-title>
+                <q-btn
+                    @click="handleLogout"
+                    outline
+                >
+                    Sair
+                </q-btn>
             </q-toolbar>
         </q-header>
         <q-ajax-bar
@@ -69,14 +75,20 @@
     </q-layout>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 import {
     RouteRecordNormalized,
     useRoute,
     RouteLocationRaw
 } from 'vue-router'
 import { useAuthStore } from 'stores/auth-store'
+import AuthService from 'src/features/auth/services/AuthService'
+
+const leftDrawerOpen = ref(false)
+function toggleLeftDrawer() {
+    leftDrawerOpen.value = !leftDrawerOpen.value
+}
 
 type BreadcrumbRouteEl = {
     label: string
@@ -84,8 +96,8 @@ type BreadcrumbRouteEl = {
     to?: RouteLocationRaw,
 
 }
-
-function routeBreadcrumbs(): BreadcrumbRouteEl[] {
+const route = useRoute()
+const routeBreadcrumbs = computed<BreadcrumbRouteEl[]>(() => {
     return useRoute().matched
         .filter((matchedRoute: RouteRecordNormalized): boolean => !!matchedRoute.meta.title)
         .map((matchedRoute: RouteRecordNormalized): BreadcrumbRouteEl => {
@@ -95,25 +107,13 @@ function routeBreadcrumbs(): BreadcrumbRouteEl[] {
                 to: { name: matchedRoute.name }
             }
         })
-}
-
-export default defineComponent({
-    name: 'MainLayout',
-
-    setup() {
-        const leftDrawerOpen = ref(false)
-        const route = useRoute()
-        const authStore = useAuthStore()
-        authStore.checkSession()
-        return {
-            leftDrawerOpen,
-            toggleLeftDrawer() {
-                leftDrawerOpen.value = !leftDrawerOpen.value
-            },
-
-            routeBreadcrumbs: computed<BreadcrumbRouteEl[]>(routeBreadcrumbs),
-            route,
-        }
-    },
 })
+
+const authStore = useAuthStore()
+authStore.checkSession()
+
+async function handleLogout() {
+    await AuthService.logout()
+    authStore.clearUserSession()
+}
 </script>

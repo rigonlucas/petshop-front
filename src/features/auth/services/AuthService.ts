@@ -24,11 +24,16 @@ export interface ResponseData {
 }
 
 export async function login(email: string, password: string) {
-    const { data } = await api.post<ResponseData>('http://localhost:80/api/login', { email, password })
+    const { data } = await api.post<ResponseData>('http://localhost/api/login', { email, password })
 
     return data.data as LoginResponseData
 }
 
+export async function logout() {
+    await api.get<ResponseData>('http://localhost/api/logout')
+}
+
 export default {
     login,
+    logout,
 }
