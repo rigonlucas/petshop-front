@@ -9,3 +9,10 @@ export interface PaginatedServerResponse<DataT> {
     data: DataT[]
     meta: MetaResponse
 }
+
+export interface ApiErrors {
+    message: string,
+    errors: {
+        [key: string]: string[]
+    }
+}

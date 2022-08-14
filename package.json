@@ -17,6 +17,8 @@
         "@fullcalendar/interaction": "^5.11.0",
         "@fullcalendar/vue3": "^5.11.1",
         "@quasar/extras": "^1.0.0",
+        "@vuelidate/core": "^2.0.0-alpha.44",
+        "@vuelidate/validators": "^2.0.0-alpha.31",
         "axios": "^0.21.1",
         "date-fns": "^2.29.1",
         "pinia": "^2.0.11",

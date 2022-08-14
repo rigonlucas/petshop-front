@@ -14,7 +14,7 @@
                         <schedule-form
                             class="q-py-none"
                             @submiting="isSubmiting = true"
-                            @success="isSubmiting = false"
+                            @success="handleSuccess"
                             @error="isSubmiting = false"
                         />
                     </div>
@@ -49,6 +49,10 @@ function handleHide() {
 }
 
 const isSubmiting = ref(false)
+function handleSuccess() {
+    handleHide()
+    isSubmiting.value = false
+}
 
 </script>
 

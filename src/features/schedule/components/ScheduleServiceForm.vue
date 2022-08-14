@@ -6,6 +6,7 @@
                 @update:model-value="handleTypeSelect"
                 label="Tipo do serviço"
                 :options="typesOptions"
+                :error-msg="typeErrors[0]?.$message || ''"
             />
         </div>
         <div class="q-pt-sm col-12 col-md-4">
@@ -17,6 +18,7 @@
                 :stack-label="!!props.duration"
                 hide-selected
                 fill-input
+                :error-msg="durationErrors[0]?.$message || ''"
             >
                 <template #option="scope">
                     <q-item v-bind="scope.itemProps" style="align-items: center;">
@@ -28,11 +30,11 @@
     </div>
     <div class="row q-col-gutter-sm q-pt-sm">
         <div class="col-12 col-md-4">
-            <q-input
+            <base-input
                 :model-value="start_at"
                 @update:model-value="emit('update:start_at', $event)"
-                outlined
-                :rules="[val => !!val || 'Field is required']"
+                :error-msg="start_atErrors[0]?.$message || ''"
+                mask="##/##/#### ##:##"
             >
                 <template #prepend>
                     <q-btn
@@ -72,7 +74,7 @@
                         </q-popup-proxy>
                     </q-btn>
                 </template>
-            </q-input>
+            </base-input>
         </div>
         <div class="col-12 col-md-8">
             <base-async-select
@@ -80,6 +82,7 @@
                 @update:model-value="handleSelectUser"
                 label="Profissional"
                 :fetch-callback="fetchUsersCallback"
+                :error-msg="userErrors[0]?.$message || ''"
             />
         </div>
     </div>
@@ -97,14 +100,19 @@ import BaseAsyncSelect from 'components/Select/BaseAsyncSelect.vue'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import { format, parse } from 'date-fns'
 import { QSelectOption } from 'quasar'
+import { ErrorObject } from '@vuelidate/core'
+import BaseInput from 'components/Input/BaseInput.vue'
 
 interface Props {
     type?: DetailedSelectOption<number>
     duration?: number
     start_at?: string
     user?: UserModel
+    typeErrors?: ErrorObject[]
+    durationErrors?: ErrorObject[]
+    start_atErrors?: ErrorObject[]
+    userErrors?: ErrorObject[]
 }
-
 const props = defineProps<Props>()
 
 interface Emits {
@@ -119,7 +127,7 @@ const { primitivesToQSelectOptions } = useHelpers<number>()
 const typesOptions = useLabelToOptions(ScheduleTypesLabels)
 function handleDurationInput(value: string) {
     const valueAsNumber = Number(value)
-    if (isNaN(valueAsNumber)) {
+    if (isNaN(valueAsNumber) || value === '' || value === null) {
         return
     }
 
@@ -131,7 +139,6 @@ const fetchUsersCallback = async (input: string, page: number) => {
         return
     }
     const parsedDate = parse(props.start_at, 'dd/MM/yyyy HH:mm', new Date())
-    console.log(parsedDate)
     return await ScheduleService.listAvailableProfessionals({ date_time: format(parsedDate, 'yyyy-MM-dd HH:mm'), duration: props.duration }, page)
 }
 

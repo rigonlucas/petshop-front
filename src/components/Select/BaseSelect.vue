@@ -6,11 +6,13 @@
         @filter="handleFilterOptions"
         v-bind="$attrs"
         :options="filteredOptions"
+        :error="!!errorMsg"
+        :error-message="errorMsg"
     >
         <template #no-option="scope">
             <slot name="no-option" v-bind="scope">
                 <q-item style="align-items: center;">
-                    Nenhum usuário encontrado
+                    Nenhum registro encontrado
                 </q-item>
             </slot>
         </template>
@@ -37,6 +39,7 @@ import useBasicSelectFilter from 'src/composables/select/useBasicSelectFilter'
 
 interface Props extends QSelectProps {
     options: QSelectOption[]
+    errorMsg?: string
 }
 
 const props = defineProps<Props>()

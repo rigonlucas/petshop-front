@@ -4,8 +4,9 @@
             <base-async-select
                 :model-value="props.client"
                 @update:model-value="handleClientSelect"
-                label="Cliente"
+                label="Cliente*"
                 :fetch-callback="fetchClientsCallback"
+                :error-msg="clientErrors[0]?.$message || ''"
                 style="flex-grow: 1;"
             />
         </div>
@@ -13,8 +14,9 @@
             <base-async-select
                 :model-value="props.pet"
                 @update:model-value="handleSelectPet"
-                label="Pet"
+                label="Pet*"
                 :fetch-callback="fetchPetsCallback"
+                :error-msg="petErrors[0]?.$message || ''"
                 style="flex-grow: 1;"
             >
                 <template #option="scope">
@@ -36,10 +38,13 @@ import PetService from 'src/features/pet/services/PetService'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 import BaseAsyncSelect from 'components/Select/BaseAsyncSelect.vue'
+import { ErrorObject } from '@vuelidate/core'
 
 interface Props {
     client?: DetailedSelectOption<ClientModel>
     pet?: DetailedSelectOption<PetModel>
+    clientErrors?: ErrorObject[]
+    petErrors?: ErrorObject[]
 }
 
 const props = defineProps<Props>()

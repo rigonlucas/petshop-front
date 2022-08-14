@@ -25,5 +25,5 @@ export interface FormData {
     duration: number | null,
     start_at: string | null,
     user: DetailedSelectOption<UserModel> | null,
-    observation: string | null,
+    description: string | null,
 }

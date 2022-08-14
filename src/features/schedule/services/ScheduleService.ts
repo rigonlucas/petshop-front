@@ -24,9 +24,10 @@ interface CreateInput {
     start_at: number
     datetime: string
     description?: string
+    status?: string
 }
 export async function create(data: CreateInput) {
-    const response = await api.post('schedule', data)
+    const response = await api.post('schedule', { ...data, status: 1 })
 
     return response.data
 }

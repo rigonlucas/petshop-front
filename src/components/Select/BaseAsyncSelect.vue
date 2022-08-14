@@ -6,8 +6,11 @@
         @filter="handleFilter"
         @virtual-scroll="handleOnScroll"
         :loading="isLoading"
-        v-bind="$attrs"
         :options="options"
+        bottom-slots
+        :error="!!errorMsg"
+        :error-message="errorMsg"
+        v-bind="$attrs"
     >
         <template #no-option="scope">
             <slot name="no-option" v-bind="scope">
@@ -23,6 +26,10 @@
                     {{ scope.label }}
                 </q-item>
             </slot>
+        </template>
+
+        <template #error>
+            <div v-for="error in errors" :key="error">{{ error }}</div>
         </template>
     </q-select>
 </template>
@@ -40,6 +47,7 @@ import { PaginatedServerResponse } from 'src/models/ApiModels'
 
 interface Props extends QSelectProps {
     fetchCallback: (input: string, page: number) => Promise<PaginatedServerResponse<any>>
+    errorMsg?: string
 }
 const props = defineProps<Props>()
 

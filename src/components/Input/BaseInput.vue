@@ -1,9 +1,17 @@
 <template>
     <q-input
         outlined
+        :error="!!errorMsg"
+        :error-message="errorMsg"
         v-bind="$attrs"
-        autocomplete="on"
-    />
+    >
+        <template #prepend>
+            <slot name="prepend" />
+        </template>
+        <template #append>
+            <slot name="append" />
+        </template>
+    </q-input>
 </template>
 
 <script lang="ts">
@@ -13,11 +21,11 @@ export default {
 </script>
 <script setup lang="ts">
 import { defineProps } from 'vue/dist/vue'
-import { QInputProps, QSelectOption, QSelectProps } from 'quasar'
-import useBasicSelectFilter from 'src/composables/select/useBasicSelectFilter'
+import { QInputProps } from 'quasar'
 
 /* eslint-disable */
 interface Props extends QInputProps {
+    errorMsg?: string
 }
 defineProps<Props>()
 </script>
