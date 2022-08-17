@@ -7,7 +7,6 @@
         @virtual-scroll="handleOnScroll"
         :loading="isLoading"
         :options="options"
-        bottom-slots
         :error="!!errorMsg"
         :error-message="errorMsg"
         v-bind="$attrs"

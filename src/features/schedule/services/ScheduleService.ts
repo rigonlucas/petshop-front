@@ -1,12 +1,24 @@
 import { api } from 'boot/axios'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PaginatedServerResponse } from 'src/models/ApiModels'
+import { ScheduleModel } from 'src/features/schedule/models/ScheduleModel'
+
+export async function list(params: {
+    start_at_start?: string
+    start_at_end?: string
+    user_id?: string
+    include?: ('user' | 'client' | 'pet')[]
+}): Promise<PaginatedServerResponse<ScheduleModel>> {
+    const includeAsString = params.include?.join(',')
+    const response = await api.get<PaginatedServerResponse<ScheduleModel>>('schedules', { params: { ...params, include: includeAsString } })
+
+    return response.data
+}
 
 export interface WorkerModel {
     id: number,
     name: string,
 }
-
 export async function listAvailableProfessionals(params: {
     date_time: string
     duration: number
@@ -33,6 +45,7 @@ export async function create(data: CreateInput) {
 }
 
 export default {
+    list,
     listAvailableProfessionals,
     create,
 }

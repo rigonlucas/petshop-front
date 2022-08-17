@@ -6,6 +6,7 @@
         @filter="handleFilterOptions"
         v-bind="$attrs"
         :options="filteredOptions"
+        :bottom-slots="!!errorMsg"
         :error="!!errorMsg"
         :error-message="errorMsg"
     >
