@@ -40,8 +40,14 @@
                 </full-calendar>
             </div>
         </div>
-        <router-view/>
+        <Suspense>
+            <router-view/>
+            <template #fallback>
+                <q-inner-loading showing/>
+            </template>
+        </Suspense>
     </q-page>
+
 </template>
 
 <script lang="ts" setup>
@@ -54,8 +60,8 @@ import { CalendarOptions } from '@fullcalendar/core'
 import localePtBr from '@fullcalendar/core/locales/pt-br'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import { differenceInMinutes, format, getDay, isPast } from 'date-fns'
-import { FormData } from 'src/features/schedule/models/ScheduleForm'
-// import { useRouter } from 'vue-router'
+import { ScheduleFormData } from 'src/features/schedule/models/ScheduleForm'
+import { useRouter } from 'vue-router'
 import { reactive, ref } from 'vue'
 
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
@@ -66,7 +72,7 @@ import { useSchedulePopup } from 'pages/schedule/composables/useSchedulePopup'
 // }
 // const router = useRouter()
 
-const prefilledScheduleData = reactive<FormData>({
+const prefilledScheduleData = reactive<ScheduleFormData>({
     start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
     duration: 30,
 })
@@ -90,11 +96,8 @@ async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promi
             title: `${schedule.pet.name} - ${schedule.client.name}`,
             date: schedule.start_at,
             end: schedule.finish_at,
-            extendedProps: {
-                user: schedule.user,
-                client: schedule.client,
-                pet: schedule.pet,
-            },
+            className: 'cursor-pointer',
+            extendedProps: schedule,
         }
     ))
 }
@@ -107,6 +110,8 @@ const {
     showPopup,
     popupPosition,
 } = useSchedulePopup(calendar)
+
+const router = useRouter()
 
 const calendarOptions: CalendarOptions = {
     locale: localePtBr,
@@ -132,6 +137,13 @@ const calendarOptions: CalendarOptions = {
     // dateClick: (e) => {
     //     console.log(e)
     // },
+    eventClick: (e) => {
+        const eventId = e.event.extendedProps.id
+        if (!eventId) {
+            return
+        }
+        router.push({ name: 'schedule.edit', params: { id: eventId } })
+    },
     select: (e) => {
         if (isPast(e.start)) {
             return

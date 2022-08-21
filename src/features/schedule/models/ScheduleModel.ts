@@ -10,12 +10,12 @@ export interface ScheduleModel {
     user_id: number
     type: number
     status: number
-    start_at: number
+    start_at: string
     duration: number
-    finish_at: number
-    description?: number
-    created_at: number
-    updated_at?: number
+    finish_at: string
+    description?: string
+    created_at: string
+    updated_at?: string
     pet: PetModel
     client: ClientModel
     user: UserModel

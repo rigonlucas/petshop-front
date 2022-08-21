@@ -37,11 +37,11 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { FormData } from 'src/features/schedule/models/ScheduleForm'
+import { ScheduleFormData } from 'src/features/schedule/models/ScheduleForm'
 import InfoBannerItem from 'src/features/schedule/components/InfoBannerItem.vue'
 
 interface Props {
-    formData: FormData
+    formData: ScheduleFormData
 }
 
 defineProps<Props>()

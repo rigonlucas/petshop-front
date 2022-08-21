@@ -28,7 +28,7 @@ export async function listAvailableProfessionals(params: {
     return response.data
 }
 
-interface CreateInput {
+interface ScheduleInput {
     client_id: number
     pet_id: number
     user_id: number
@@ -38,14 +38,28 @@ interface CreateInput {
     description?: string
     status?: string
 }
-export async function create(data: CreateInput) {
+export async function create(data: ScheduleInput) {
     const response = await api.post('schedule', { ...data, status: 1 })
 
     return response.data
+}
+
+export async function edit(id: number, data: ScheduleInput) {
+    const response = await api.put(`schedule/${id}`, { ...data, status: 1 })
+
+    return response.data
+}
+
+export async function get(id: number) {
+    const response = await api.get(`schedule/${id}`)
+
+    return response.data.data as ScheduleModel
 }
 
 export default {
     list,
     listAvailableProfessionals,
     create,
+    edit,
+    get,
 }

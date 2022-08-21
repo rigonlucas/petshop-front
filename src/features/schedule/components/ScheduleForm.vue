@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
-import { FormData } from 'src/features/schedule/models/ScheduleForm'
+import { ScheduleFormData } from 'src/features/schedule/models/ScheduleForm'
 import ScheduleServiceForm from 'src/features/schedule/components/ScheduleServiceForm.vue'
 import { format, parse } from 'date-fns'
 import InfoBanner from 'src/features/schedule/components/InfoBanner.vue'
@@ -62,6 +62,9 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    id: {
+        type: Number,
+    },
     initialFormData: {
         type: Object,
     }
@@ -74,7 +77,7 @@ interface Emits {
 }
 const emit = defineEmits<Emits>()
 
-const formData: FormData = reactive({
+const formData: ScheduleFormData = reactive({
     client: null,
     pet: null,
     type: null,
@@ -95,7 +98,7 @@ const formRules = {
     user: { requiredWithMessage }
 }
 
-const v$ = useVuelidate(formRules, formData)
+const v$ = useVuelidate<ScheduleFormData>(formRules, formData)
 
 async function handleSubmit() {
     v$.value.$touch()
@@ -106,17 +109,23 @@ async function handleSubmit() {
     try {
         const { client, pet, user, type, start_at, ...rest } = formData
         const parsedStartAt = parse(start_at, 'dd/MM/yyyy HH:mm', new Date())
-        isSubmiting.value = true
-        emit('submiting')
-        await ScheduleService.create({
+        const data = {
             client_id: client?.value,
             pet_id: pet?.value,
             user_id: user?.value,
             type: type?.value,
             start_at: format(parsedStartAt, 'yyyy-MM-dd HH:mm:ss'),
             ...rest
-        })
-        notifyPositive('Agendamento cadastrado com sucesso!')
+        }
+        isSubmiting.value = true
+        emit('submiting')
+        if (!props.id) {
+            await ScheduleService.create(data)
+            notifyPositive('Agendamento cadastrado com sucesso!')
+        } else {
+            await ScheduleService.edit(props.id, data)
+            notifyPositive('Agendamento atualizado com sucesso!')
+        }
         emit('success')
     } catch (error: unknown) {
         emit('error')

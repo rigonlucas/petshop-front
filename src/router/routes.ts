@@ -6,6 +6,7 @@ declare module 'vue-router' {
         icon?: string
         isProtected?: boolean
         onlyGuest?: boolean
+        keepScrool?: boolean
     }
 }
 
@@ -50,6 +51,15 @@ const routes: RouteRecordRaw[] = [
                                 name: 'schedule.create',
                                 path: 'novo',
                                 component: () => import('pages/schedule/ScheduleCreate.vue'),
+                            },
+                            {
+                                name: 'schedule.edit',
+                                props: true,
+                                path: 'editar/:id',
+                                component: () => import('pages/schedule/ScheduleEdit.vue'),
+                                meta: {
+                                    keepScrool: true,
+                                }
                             },
                         ],
                     },

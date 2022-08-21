@@ -2,7 +2,6 @@ import { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOption
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 import UserModel from 'src/features/user/models/UserModel'
-import { QSelectOption } from 'quasar'
 
 export enum ScheduleTypes {
     VETERINARIAN = 1,
@@ -16,12 +15,14 @@ export const ScheduleTypesLabels = {
     [ScheduleTypes.PET_CUT]: 'Tosa',
     [ScheduleTypes.PET_SHOWER]: 'Banho',
     [ScheduleTypes.PET_CUT_SHOWER]: 'Banho e tosa',
+} as {
+    [key: number]: string
 }
 
-export interface FormData {
+export interface ScheduleFormData {
     client?: DetailedSelectOption<ClientModel> | null,
     pet?: DetailedSelectOption<PetModel> | null,
-    type?: QSelectOption<ScheduleTypes> | null,
+    type?: DetailedSelectOption<ScheduleTypes> | null,
     duration?: number | null,
     start_at?: string | null,
     user?: DetailedSelectOption<UserModel> | null,

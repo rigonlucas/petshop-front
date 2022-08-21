@@ -53,14 +53,12 @@ export function useSchedulePopup(calendarRef: Ref<InstanceType<typeof FullCalend
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function openPopup(event: DateSelectArg) {
-        console.log(event.view.type)
         popupPosition.value = GRID_TYPE_POSITION[event.view.type] ?? DEFAULT_POSITIONS
         menuTarget.value = '.temp-event'
         showPopup.value = true
     }
 
     function handleSelect(event: DateSelectArg) {
-        console.log({ select: event })
         removeFakeEvent()
         createFakeEvent(event)
         openPopup(event)
