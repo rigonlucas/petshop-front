@@ -26,7 +26,11 @@
                     max-height="800px"
                 >
                     <div class="bg-white q-pa-sm">
-                        <schedule-form />
+                        <schedule-form
+                            :initial-form-data="prefilledScheduleData"
+                            show-save-button
+                            @success="handleCreatedSchedule"
+                        />
                     </div>
                 </q-popup-proxy>
                 <full-calendar
@@ -49,9 +53,10 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { CalendarOptions } from '@fullcalendar/core'
 import localePtBr from '@fullcalendar/core/locales/pt-br'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
-import { format } from 'date-fns'
+import { differenceInMinutes, format, getDay, isPast } from 'date-fns'
+import { FormData } from 'src/features/schedule/models/ScheduleForm'
 // import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
 import { useSchedulePopup } from 'pages/schedule/composables/useSchedulePopup'
@@ -60,6 +65,19 @@ import { useSchedulePopup } from 'pages/schedule/composables/useSchedulePopup'
 //     console.log({ click: e })
 // }
 // const router = useRouter()
+
+const prefilledScheduleData = reactive<FormData>({
+    start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
+    duration: 30,
+})
+function handleCreatedSchedule() {
+    showPopup.value = false
+    if (!calendar.value) {
+        return
+    }
+    calendar.value.getApi().refetchEvents()
+}
+
 async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promise<EventInput[]> {
     const response = await ScheduleService.list({
         start_at_start: format(start, 'yyyy-MM-dd'),
@@ -105,14 +123,24 @@ const calendarOptions: CalendarOptions = {
     ],
     selectable: true,
     selectMirror: true,
+    selectAllow: (e) => !isPast(e.start),
     weekends: true,
+    firstDay: getDay(new Date()),
     events: fetchSchedules,
     // events: 'https://fullcalendar.io/api/demo-feeds/events.json',
     // dateClick: handleDateClick,
     // dateClick: (e) => {
     //     console.log(e)
     // },
-    select: handleSelect,
+    select: (e) => {
+        if (isPast(e.start)) {
+            return
+        }
+
+        prefilledScheduleData.start_at = format(e.start, 'dd/MM/yyyy HH:mm')
+        prefilledScheduleData.duration = differenceInMinutes(e.end, e.start)
+        handleSelect(e)
+    },
     // unselect: (e) => {
     //     // console.log({ unselecto: e })
     //     // nextTick(() => {

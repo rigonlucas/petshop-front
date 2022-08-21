@@ -19,11 +19,11 @@ export const ScheduleTypesLabels = {
 }
 
 export interface FormData {
-    client: DetailedSelectOption<ClientModel> | null,
-    pet: DetailedSelectOption<PetModel> | null,
-    type: QSelectOption<ScheduleTypes> | null,
-    duration: number | null,
-    start_at: string | null,
-    user: DetailedSelectOption<UserModel> | null,
-    description: string | null,
+    client?: DetailedSelectOption<ClientModel> | null,
+    pet?: DetailedSelectOption<PetModel> | null,
+    type?: QSelectOption<ScheduleTypes> | null,
+    duration?: number | null,
+    start_at?: string | null,
+    user?: DetailedSelectOption<UserModel> | null,
+    description?: string | null,
 }

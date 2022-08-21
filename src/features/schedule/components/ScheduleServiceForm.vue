@@ -1,35 +1,6 @@
 <template>
     <div class="row q-col-gutter-sm">
-        <div class="q-pt-sm col-12 col-md-8">
-            <base-select
-                :model-value="props.type"
-                @update:model-value="handleTypeSelect"
-                label="Tipo do serviço"
-                :options="typesOptions"
-                :error-msg="typeErrors[0]?.$message || ''"
-            />
-        </div>
-        <div class="q-pt-sm col-12 col-md-4">
-            <base-select
-                :model-value="props.duration"
-                @input-value="handleDurationInput"
-                label="Duração"
-                :options="primitivesToQSelectOptions([15, 30, 45, 60])"
-                :stack-label="!!props.duration"
-                hide-selected
-                fill-input
-                :error-msg="durationErrors[0]?.$message || ''"
-            >
-                <template #option="scope">
-                    <q-item v-bind="scope.itemProps" style="align-items: center;">
-                        <q-item-label>{{ scope.opt.label }} minutos</q-item-label>
-                    </q-item>
-                </template>
-            </base-select>
-        </div>
-    </div>
-    <div class="row q-col-gutter-sm q-pt-sm">
-        <div class="col-12 col-md-4">
+        <div class="q-pt-sm col-12 col-md-6" style="">
             <base-input
                 :model-value="start_at"
                 @update:model-value="emit('update:start_at', $event)"
@@ -76,7 +47,36 @@
                 </template>
             </base-input>
         </div>
-        <div class="col-12 col-md-8">
+        <div class="q-pt-sm col-12 col-md-6">
+            <base-select
+                :model-value="props.duration"
+                @input-value="handleDurationInput"
+                label="Duração"
+                :options="primitivesToQSelectOptions([15, 30, 45, 60])"
+                :stack-label="!!props.duration"
+                hide-selected
+                fill-input
+                :error-msg="durationErrors[0]?.$message || ''"
+            >
+                <template #option="scope">
+                    <q-item v-bind="scope.itemProps" style="align-items: center;">
+                        <q-item-label>{{ scope.opt.label }} minutos</q-item-label>
+                    </q-item>
+                </template>
+            </base-select>
+        </div>
+    </div>
+    <div class="row q-col-gutter-sm q-pt-sm">
+        <div class="q-pt-sm col-12 col-md-6">
+            <base-select
+                :model-value="props.type"
+                @update:model-value="handleTypeSelect"
+                label="Tipo do serviço"
+                :options="typesOptions"
+                :error-msg="typeErrors[0]?.$message || ''"
+            />
+        </div>
+        <div class="q-pt-sm col-12 col-md-6" style="">
             <base-async-select
                 :model-value="props.user"
                 @update:model-value="handleSelectUser"

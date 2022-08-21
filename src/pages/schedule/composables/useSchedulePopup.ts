@@ -27,7 +27,8 @@ export function useSchedulePopup(calendarRef: Ref<InstanceType<typeof FullCalend
     const popupPosition = ref(DEFAULT_POSITIONS)
     const menuTarget = ref('#popover-fall-back')
     const tempEvent = ref<EventInput>({
-        title: 'Novo agendamento'
+        title: 'Novo agendamento',
+        className: 'temp-event'
     })
 
     function removeFakeEvent() {
@@ -54,7 +55,7 @@ export function useSchedulePopup(calendarRef: Ref<InstanceType<typeof FullCalend
     function openPopup(event: DateSelectArg) {
         console.log(event.view.type)
         popupPosition.value = GRID_TYPE_POSITION[event.view.type] ?? DEFAULT_POSITIONS
-        menuTarget.value = '.fc-event-mirror'
+        menuTarget.value = '.temp-event'
         showPopup.value = true
     }
 

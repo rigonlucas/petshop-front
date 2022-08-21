@@ -26,11 +26,23 @@
                 />
             </div>
         </div>
+        <div class="row">
+            <q-btn
+                v-if="showSaveButton"
+                color="primary"
+                type="submit"
+                form="schedule-form"
+                :loading="isSubmiting"
+                :disable="isSubmiting"
+            >
+                Salvar
+            </q-btn>
+        </div>
     </form>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
 import { FormData } from 'src/features/schedule/models/ScheduleForm'
 import ScheduleServiceForm from 'src/features/schedule/components/ScheduleServiceForm.vue'
@@ -44,6 +56,16 @@ import BaseInput from 'components/Input/BaseInput.vue'
 import { notifyNegative, notifyPositive } from 'src/utils/Notify'
 import axios from 'axios'
 import { ApiErrors } from 'src/models/ApiModels'
+
+const props = defineProps({
+    showSaveButton: {
+        type: Boolean,
+        default: false
+    },
+    initialFormData: {
+        type: Object,
+    }
+})
 
 interface Emits {
     (event: 'submiting'): void
@@ -60,7 +82,9 @@ const formData: FormData = reactive({
     start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
     user: null,
     description: null,
+    ...props.initialFormData,
 })
+const isSubmiting = ref(false)
 const requiredWithMessage = helpers.withMessage('Campo obrigatório', required)
 const formRules = {
     client: { requiredWithMessage },
@@ -82,6 +106,7 @@ async function handleSubmit() {
     try {
         const { client, pet, user, type, start_at, ...rest } = formData
         const parsedStartAt = parse(start_at, 'dd/MM/yyyy HH:mm', new Date())
+        isSubmiting.value = true
         emit('submiting')
         await ScheduleService.create({
             client_id: client?.value,
@@ -104,6 +129,8 @@ async function handleSubmit() {
             caption = Object.values(responseData.errors).flat().join('<br>')
         }
         notifyNegative('Não foi possível cadastrar agendamento', caption)
+    } finally {
+        isSubmiting.value = false
     }
 }
 
