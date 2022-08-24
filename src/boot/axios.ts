@@ -7,7 +7,7 @@ import { useAuthStore } from 'stores/auth-store'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'http://192.168.0.108:80/api/v1' })
+const api = axios.create({ baseURL: 'http://localhost:80/api/v1' })
 
 api.interceptors.request.use(request => {
     const authStore = useAuthStore()

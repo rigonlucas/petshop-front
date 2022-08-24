@@ -65,6 +65,20 @@ const routes: RouteRecordRaw[] = [
                     },
                 ],
             },
+            {
+                path: '/clientes',
+                children: [
+                    {
+                        name: 'clients.index',
+                        path: '',
+                        component: () => import('pages/client/ClientIndex.vue'),
+                        meta: {
+                            title: 'Clientes',
+                            icon: 'calendar_today',
+                        },
+                    },
+                ],
+            },
         ],
         meta: {
             isProtected: true,
