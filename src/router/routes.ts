@@ -1,4 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
+import clients from 'src/router/routes/clients'
+import schedules from 'src/router/routes/schedules'
+import auth from 'src/router/routes/auth'
 
 declare module 'vue-router' {
     interface RouteMeta {
@@ -11,74 +14,14 @@ declare module 'vue-router' {
 }
 
 const routes: RouteRecordRaw[] = [
-    {
-        path: '/auth',
-        component: () => import('layouts/AuthLayout.vue'),
-        children: [
-            {
-                name: 'auth.login',
-                path: 'login',
-                component: () => import('pages/auth/AuthLogin.vue'),
-            },
-            {
-                name: 'auth.forgot',
-                path: 'login',
-                component: () => import('pages/auth/AuthLogin.vue'),
-            },
-        ],
-        meta: {
-            onlyGuest: true,
-        },
-    },
+    ...auth,
     {
         path: '/',
         component: () => import('layouts/MainLayout.vue'),
         children: [
             { name: 'home', path: '', component: () => import('pages/IndexPage.vue') },
-            {
-                path: '/agendamento',
-                children: [
-                    {
-                        name: 'schedule.index',
-                        path: '',
-                        component: () => import('pages/schedule/ScheduleIndex.vue'),
-                        meta: {
-                            title: 'Agendamento',
-                            icon: 'calendar_today',
-                        },
-                        children: [
-                            {
-                                name: 'schedule.create',
-                                path: 'novo',
-                                component: () => import('pages/schedule/ScheduleCreate.vue'),
-                            },
-                            {
-                                name: 'schedule.edit',
-                                props: true,
-                                path: 'editar/:id',
-                                component: () => import('pages/schedule/ScheduleEdit.vue'),
-                                meta: {
-                                    keepScrool: true,
-                                }
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                path: '/clientes',
-                children: [
-                    {
-                        name: 'clients.index',
-                        path: '',
-                        component: () => import('pages/client/ClientIndex.vue'),
-                        meta: {
-                            title: 'Clientes',
-                            icon: 'calendar_today',
-                        },
-                    },
-                ],
-            },
+            ...schedules,
+            ...clients,
         ],
         meta: {
             isProtected: true,

@@ -36,24 +36,14 @@
             bordered
             :width="200"
         >
-            <q-list padding style="margin-top: 150px;">
-                <q-item clickable v-ripple :to="{ name: 'schedule.index' }">
-                    <q-item-section avatar>
-                        <q-icon name="calendar_today"/>
-                    </q-item-section>
-
-                    <q-item-section>
-                        Agendamento
-                    </q-item-section>
-                </q-item>
-            </q-list>
+            <left-menu></left-menu>
 
             <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
                 <div class="absolute-bottom bg-transparent">
-                    <q-avatar size="56px" class="q-mb-sm">
+                    <q-avatar size="56px" class="q-mb-dm content-end">
                         <img src="https://cdn.quasar.dev/img/boy-avatar.png">
                     </q-avatar>
-                    <div class="text-weight-bold">Fulano de tal</div>
+                    <div class="text-weight-bold">{{ authStore.getUser.name }}</div>
                 </div>
             </q-img>
         </q-drawer>
@@ -84,6 +74,7 @@ import {
 } from 'vue-router'
 import { useAuthStore } from 'stores/auth-store'
 import AuthService from 'src/features/auth/services/AuthService'
+import LeftMenu from 'layouts/menus/LeftMenu.vue'
 
 const leftDrawerOpen = ref(false)
 function toggleLeftDrawer() {

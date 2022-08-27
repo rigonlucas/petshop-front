@@ -5,6 +5,10 @@
             :rows="rows"
             :columns="columns"
             row-key="name"
+            :rows-per-page-options="[1, 10, 20]"
+            :pagination="pagination"
+            @request="handlerRequest"
+            @update:pagination="handlerRequest"
         >
             <template #body-cell-pets="{ row }: { row: ClientModel }">
                 <q-td v-if=row.pets.length>
@@ -62,6 +66,11 @@ import { ref, onMounted } from 'vue'
 import ClientService from 'src/features/client/services/ClientService'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 
+const pagination = ref({
+    page: 1,
+    rowsPerPage: 20,
+    rowsNumber: 0,
+})
 const columns = [
     {
         name: 'name',
@@ -99,15 +108,38 @@ const columns = [
         label: 'Opções',
         field: 'options',
         sortable: false,
-    }
+    },
 ]
 
 const rows = ref<ClientModel[]>([])
-onMounted(async() => {
-    rows.value = (await ClientService.list({
+async function fetchClients({
+    page, per_page,
+}: { page: number, per_page: number }) {
+    return (await ClientService.list({
         include: ['pets', 'pets.breed'],
-        include_count: ['schedules'],
-    })).data
-})
+        page: page,
+        per_page: per_page,
+    }))
+}
 
+const handlerRequest = async(props) => {
+    console.log(props)
+    console.log(props.pagination)
+    const response = await fetchClients({
+        page: props.pagination.page,
+        per_page: props.pagination.rowsPerPage,
+    })
+    rows.value = response.data
+    pagination.value.page = response.meta.current_page
+    pagination.value.rowsPerPage = response.meta.per_page
+    pagination.value.rowsNumber = response.meta.total
+}
+
+onMounted(async() => {
+    const response = await fetchClients({
+        page: pagination.value.page,
+        per_page: pagination.value.rowsPerPage,
+    })
+    rows.value = response.data
+})
 </script>
