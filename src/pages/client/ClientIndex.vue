@@ -3,13 +3,30 @@
         <q-table
             title="Clientes"
             :rows="rows"
+            dense
             :columns="columns"
             row-key="name"
-            :rows-per-page-options="[1, 10, 20]"
+            :rows-per-page-options="[10, 20, 30, 50]"
             :pagination="pagination"
             @request="handlerRequest"
             @update:pagination="handlerRequest"
+            :loading="isLoading"
         >
+            <template v-slot:loading>
+                <q-inner-loading showing color="primary" />
+            </template>
+            <template v-slot:top-right>
+                <q-input dense
+                         debounce="300"
+                         v-model="clientName"
+                         placeholder="Pesquisa por nome"
+                         @keyup="keyUpFetchClientsByName"
+                >
+                    <template v-slot:append>
+                        <q-btn flat rounded icon="search" @click="fetchClientsByName"></q-btn>
+                    </template>
+                </q-input>
+            </template>
             <template #body-cell-pets="{ row }: { row: ClientModel }">
                 <q-td v-if=row.pets.length>
                     <template v-for="(pet, key) in row.pets" :key="key">
@@ -62,7 +79,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import ClientService from 'src/features/client/services/ClientService'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 
@@ -74,11 +91,10 @@ const pagination = ref({
 const columns = [
     {
         name: 'name',
-        required: true,
         label: 'Nome',
         align: 'left',
         field: 'name',
-        sortable: true,
+        sortable: false,
     },
     {
         name: 'email',
@@ -112,34 +128,49 @@ const columns = [
 ]
 
 const rows = ref<ClientModel[]>([])
-async function fetchClients({
-    page, per_page,
-}: { page: number, per_page: number }) {
-    return (await ClientService.list({
+const clientName = ref<string|null>(null)
+const isLoading = ref<boolean>(true)
+
+async function fetchClients(page: number, per_page: number, name: string | null = null) {
+    console.log(isLoading.value)
+    isLoading.value = true
+    const response = (await ClientService.list({
         include: ['pets', 'pets.breed'],
         page: page,
         per_page: per_page,
+        name: name,
     }))
+    isLoading.value = false
+    return response
 }
 
-const handlerRequest = async(props) => {
-    console.log(props)
-    console.log(props.pagination)
-    const response = await fetchClients({
-        page: props.pagination.page,
-        per_page: props.pagination.rowsPerPage,
-    })
+function keyUpFetchClientsByName (e: KeyboardEvent) {
+    if (e.keyCode === 13 && typeof clientName.value === 'string') {
+        fetchClientsByName()
+        return true
+    }
+    if (e.keyCode === 8 && clientName.value?.length === 0) {
+        fetchClientsByName()
+        return true
+    }
+}
+
+async function fetchClientsByName() {
+    const response = await fetchClients(pagination.value.page, pagination.value.rowsPerPage, clientName.value)
     rows.value = response.data
     pagination.value.page = response.meta.current_page
     pagination.value.rowsPerPage = response.meta.per_page
     pagination.value.rowsNumber = response.meta.total
 }
 
-onMounted(async() => {
-    const response = await fetchClients({
-        page: pagination.value.page,
-        per_page: pagination.value.rowsPerPage,
-    })
+const handlerRequest = async(props: any) => {
+    const response = await fetchClients(
+        props.pagination ? props.pagination.page : props.page,
+        props.pagination ? props.pagination.rowsPerPage : props.rowsPerPage,
+    )
     rows.value = response.data
-})
+    pagination.value.page = response.meta.current_page
+    pagination.value.rowsPerPage = response.meta.per_page
+    pagination.value.rowsNumber = response.meta.total
+}
 </script>

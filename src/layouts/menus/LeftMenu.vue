@@ -19,6 +19,15 @@
                     Clientes
                 </q-item-section>
             </q-item>
+            <q-item clickable v-ripple :to="{ name: 'product.index' }">
+                <q-item-section avatar>
+                    <q-icon name="shopping_bag"/>
+                </q-item-section>
+
+                <q-item-section>
+                    Produtos
+                </q-item-section>
+            </q-item>
         </q-list>
     </div>
 </template>
