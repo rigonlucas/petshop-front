@@ -1,16 +1,16 @@
 <template>
-    <div class="q-pa-md">
+    <div class="q-pa-lg">
         <q-table
             title="Produtos"
-            :rows="rows"
-            dense
-            :columns="columns"
             row-key="name"
+            dense
+            :rows="rows"
+            :columns="columns"
             :rows-per-page-options="[10, 20, 30, 50]"
             :pagination="pagination"
+            :loading="isLoading"
             @request="handlerRequest"
             @update:pagination="handlerRequest"
-            :loading="isLoading"
         >
             <template v-slot:loading>
                 <q-inner-loading showing color="primary" />
@@ -19,7 +19,7 @@
                 <q-input dense
                          debounce="300"
                          v-model="productName"
-                         placeholder="Pesquisa por nome"
+                         placeholder="Nome do produto"
                          @keyup="keyUpFetchProductsByName"
                 >
                     <template v-slot:append>
@@ -60,21 +60,21 @@
             <template #body-cell-options="{ row }: { row: ProductModel }">
                 <q-td :id="row.id">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col">
                             <q-btn
                                 color="primary"
                                 size="xs"
                                 icon="visibility"
                             />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col">
                             <q-btn
                                 color="warning"
                                 size="xs"
                                 icon="edit"
                             />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col">
                             <q-btn
                                 color="red"
                                 size="xs"

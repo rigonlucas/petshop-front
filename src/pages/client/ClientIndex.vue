@@ -1,16 +1,16 @@
 <template>
-    <div class="q-pa-md">
+    <div class="q-pa-lg">
         <q-table
             title="Clientes"
-            :rows="rows"
             dense
-            :columns="columns"
             row-key="name"
+            :rows="rows"
+            :columns="columns"
             :rows-per-page-options="[10, 20, 30, 50]"
             :pagination="pagination"
+            :loading="isLoading"
             @request="handlerRequest"
             @update:pagination="handlerRequest"
-            :loading="isLoading"
         >
             <template v-slot:loading>
                 <q-inner-loading showing color="primary" />
@@ -30,7 +30,7 @@
             <template #body-cell-pets="{ row }: { row: ClientModel }">
                 <q-td v-if=row.pets.length>
                     <template v-for="(pet, key) in row.pets" :key="key">
-                        <q-chip color="blue" text-color="white">
+                        <q-chip color="blue" text-color="white" size="sm">
                             <q-avatar icon="pets"/>
                             {{ pet.name }}, {{ pet.breed.name }}
                         </q-chip>
@@ -124,6 +124,7 @@ const columns = [
         label: 'Opções',
         field: 'options',
         sortable: false,
+        headerStyle: 'width: 230px',
     },
 ]
 
