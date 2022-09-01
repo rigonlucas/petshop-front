@@ -1,8 +1,8 @@
 export interface MetaResponse {
-    current_page: number
-    last_page: number
+    next_cursor?: string
+    prev_cursor?: string
+    path: string
     per_page: number
-    total: number
 }
 
 export interface PaginatedServerResponse<DataT> {

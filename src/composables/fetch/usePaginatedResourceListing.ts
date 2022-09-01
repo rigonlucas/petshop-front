@@ -3,21 +3,23 @@ import { computed, ref, UnwrapRef } from 'vue'
 import axios, { AxiosError } from 'axios'
 
 export default async function usePaginatedResourceListing<ModelResource>(
-    fetchCallback: (page: number) => Promise<PaginatedServerResponse<ModelResource>>,
+    fetchCallback: (cursor?: string) => Promise<PaginatedServerResponse<ModelResource>>,
     onError?: (error: AxiosError) => void
 ) {
     const data = ref<ModelResource[]>([])
     const meta = ref<MetaResponse|null>(null)
-    const currentPage = ref<number>(1)
+    const previousCursor = ref<string>()
+    const nextCursor = ref<string>()
     const isLoading = ref<boolean>(false)
 
-    async function fetchData(page: number) {
+    async function fetchData(cursor?: string) {
         isLoading.value = true
         try {
-            const response = await fetchCallback(page)
+            const response = await fetchCallback(cursor)
             data.value = response.data as UnwrapRef<ModelResource[]>
             meta.value = response.meta
-            currentPage.value = meta.value.current_page
+            previousCursor.value = meta.value.prev_cursor
+            nextCursor.value = meta.value.next_cursor
         } catch (error) {
             if (!axios.isAxiosError(error)) {
                 throw error
@@ -29,16 +31,16 @@ export default async function usePaginatedResourceListing<ModelResource>(
     }
 
     async function fetchPreviousPage() {
-        await fetchData(Math.max(1, currentPage.value - 1))
+        await fetchData(previousCursor.value)
     }
     async function fetchNextPage() {
-        await fetchData(currentPage.value + 1)
+        await fetchData(nextCursor.value)
     }
 
     // corrigir
-    const hasPreviousPage = computed(() => meta.value && (currentPage.value > 0 && meta.value.last_page <= currentPage.value))
-    const hasNextPage = computed(() => meta.value && (currentPage.value < meta.value.last_page))
-    await fetchData(currentPage.value)
+    const hasPreviousPage = computed(() => !!previousCursor.value)
+    const hasNextPage = computed(() => !!nextCursor.value)
+    await fetchData()
 
     return {
         data,

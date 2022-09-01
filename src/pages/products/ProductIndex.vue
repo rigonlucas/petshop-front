@@ -146,7 +146,7 @@ const columns = [
 ]
 
 const productName = ref<string | null>(null)
-watch(productName, async () => await fetchData(1))
+watch(productName, async () => await fetchData())
 
 const {
     fetchData,
@@ -156,9 +156,9 @@ const {
     hasNextPage,
     data,
     isLoading,
-} = await usePaginatedResourceListing<ProductModel>(async (page: number) => {
+} = await usePaginatedResourceListing<ProductModel>(async (cursor?: string) => {
     return await ProductService.list({
-        page,
+        cursor,
         name: productName.value,
     })
 },
