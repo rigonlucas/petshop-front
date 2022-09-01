@@ -60,7 +60,9 @@
                     :to="route.to"
                 />
             </q-breadcrumbs>
-            <router-view/>
+            <Suspense>
+                <router-view/>
+            </Suspense>
         </q-page-container>
     </q-layout>
 </template>

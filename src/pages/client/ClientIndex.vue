@@ -133,7 +133,6 @@ const clientName = ref<string|null>(null)
 const isLoading = ref<boolean>(true)
 
 async function fetchClients(page: number, per_page: number, name: string | null = null) {
-    console.log(isLoading.value)
     isLoading.value = true
     const response = (await ClientService.list({
         include: ['pets', 'pets.breed'],
