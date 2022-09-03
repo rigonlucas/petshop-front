@@ -1,4 +1,6 @@
 import { api } from 'boot/axios'
+import { email } from '@vuelidate/validators'
+import { RegisterModel } from 'src/features/auth/models/RegisterModel'
 
 interface AccountModel {
     id: number,
@@ -43,6 +45,12 @@ export async function changePassword(
     return data.data as LoginResponseData
 }
 
+export async function registerAccount(registerModel: RegisterModel) {
+    const { data } = await api.post<ResponseData>('/register', registerModel)
+
+    return data.data as LoginResponseData
+}
+
 export async function logout() {
     await api.get<ResponseData>('/logout')
 }
@@ -52,4 +60,5 @@ export default {
     logout,
     forgotPassword,
     changePassword,
+    registerAccount,
 }

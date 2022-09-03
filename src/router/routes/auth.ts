@@ -23,5 +23,17 @@ export default [
         meta: {
             onlyGuest: true,
         },
-    }
+    },
+    {
+        path: '/registrar',
+        component: () => import('layouts/RegisterLayout.vue'),
+        children: [
+            {
+                name: 'auth.register',
+                path: ':code',
+                props: true,
+                component: () => import('pages/auth/AuthRegister.vue'),
+            },
+        ],
+    },
 ]
