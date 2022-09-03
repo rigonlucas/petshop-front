@@ -29,6 +29,20 @@ export async function login(email: string, password: string) {
     return data.data as LoginResponseData
 }
 
+export async function forgotPassword(email: string) {
+    const { data } = await api.patch<ResponseData>('/forgot-password', { email })
+
+    return data.data as LoginResponseData
+}
+
+export async function changePassword(
+    email: string, password: string, password_confirmation: string, hash: string
+) {
+    const { data } = await api.patch<ResponseData>('/update-password/' + hash, { email, password, password_confirmation })
+
+    return data.data as LoginResponseData
+}
+
 export async function logout() {
     await api.get<ResponseData>('/logout')
 }
@@ -36,4 +50,6 @@ export async function logout() {
 export default {
     login,
     logout,
+    forgotPassword,
+    changePassword,
 }
