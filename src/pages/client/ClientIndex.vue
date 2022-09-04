@@ -1,29 +1,24 @@
 <template>
     <div class="q-pa-lg">
         <q-table
-            title="Clientes"
-            dense
+            title="Produtos"
             row-key="name"
-            :rows="rows"
+            :rows="data"
             :columns="columns"
-            :rows-per-page-options="[10, 20, 30, 50]"
-            :pagination="pagination"
             :loading="isLoading"
-            @request="handlerRequest"
-            @update:pagination="handlerRequest"
+            :rows-per-page-options="[0]"
         >
             <template v-slot:loading>
-                <q-inner-loading showing color="primary" />
+                <q-inner-loading showing color="primary"/>
             </template>
             <template v-slot:top-right>
-                <q-input dense
-                         debounce="300"
-                         v-model="clientName"
-                         placeholder="Pesquisa por nome"
-                         @keyup="keyUpFetchClientsByName"
+                <q-input
+                    v-model="clientName"
+                    placeholder="Nome do cliente"
+                    :debounce="300"
                 >
                     <template v-slot:append>
-                        <q-btn flat rounded icon="search" @click="fetchClientsByName"></q-btn>
+                        <q-icon name="search" />
                     </template>
                 </q-input>
             </template>
@@ -49,45 +44,59 @@
             </template>
             <template #body-cell-options="{ row }: { row: ClientModel }">
                 <q-td :id="row.id">
-                    <div class="row">
-                        <div class="col">
-                            <q-btn
-                                color="primary"
-                                size="xs"
-                                icon="visibility"
-                            />
-                        </div>
-                        <div class="col">
-                            <q-btn
-                                color="warning"
-                                size="xs"
-                                icon="edit"
-                            />
-                        </div>
-                        <div class="col">
-                            <q-btn
-                                color="red"
-                                size="xs"
-                                icon="delete"
-                            />
-                        </div>
+                    <div class="flex">
+                        <q-btn
+                            color="primary"
+                            size="xs"
+                            icon="visibility"
+                        />
+                        <q-btn
+                            color="warning"
+                            size="xs"
+                            icon="edit"
+                        />
+                        <q-btn
+                            color="red"
+                            size="xs"
+                            icon="delete"
+                        />
                     </div>
                 </q-td>
+            </template>
+            <template #pagination>
+                <q-btn
+                    icon="chevron_left"
+                    color="grey-8"
+                    round
+                    dense
+                    flat
+                    :disable="!hasPreviousPage"
+                    @click="fetchPreviousPage"
+                />
+                <q-btn
+                    icon="chevron_right"
+                    color="grey-8"
+                    round
+                    dense
+                    flat
+                    :disable="!hasNextPage"
+                    @click="fetchNextPage"
+                />
             </template>
         </q-table>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import ClientService from 'src/features/client/services/ClientService'
+import { ref, watch } from 'vue'
+import { notifyNegative } from 'src/utils/Notify'
+import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { ClientModel } from 'src/features/client/models/ClientModel'
+import ClientService from 'src/features/client/services/ClientService'
 
-const pagination = ref({
-    page: 1,
-    rowsPerPage: 20,
-    rowsNumber: 0,
-})
+const clientName = ref<string | null>(null)
+watch(clientName, async () => await fetchData())
+
 const columns = [
     {
         name: 'name',
@@ -128,49 +137,22 @@ const columns = [
     },
 ]
 
-const rows = ref<ClientModel[]>([])
-const clientName = ref<string|null>(null)
-const isLoading = ref<boolean>(true)
-
-async function fetchClients(page: number, per_page: number, name: string | null = null) {
-    isLoading.value = true
-    const response = (await ClientService.list({
+const {
+    fetchData,
+    fetchNextPage,
+    fetchPreviousPage,
+    hasPreviousPage,
+    hasNextPage,
+    data,
+    isLoading,
+} = await usePaginatedResourceListing<ClientModel>(async (cursor?: string) => {
+    return await ClientService.list({
+        cursor,
         include: ['pets', 'pets.breed'],
-        page: page,
-        per_page: per_page,
-        name: name,
-    }))
-    isLoading.value = false
-    return response
-}
+        name: clientName.value,
+    })
+},
+(error) => notifyNegative(error.response && error.response.data.message)
+)
 
-function keyUpFetchClientsByName (e: KeyboardEvent) {
-    if (e.keyCode === 13 && typeof clientName.value === 'string') {
-        fetchClientsByName()
-        return true
-    }
-    if (e.keyCode === 8 && clientName.value?.length === 0) {
-        fetchClientsByName()
-        return true
-    }
-}
-
-async function fetchClientsByName() {
-    const response = await fetchClients(pagination.value.page, pagination.value.rowsPerPage, clientName.value)
-    rows.value = response.data
-    pagination.value.page = response.meta.current_page
-    pagination.value.rowsPerPage = response.meta.per_page
-    pagination.value.rowsNumber = response.meta.total
-}
-
-const handlerRequest = async(props: any) => {
-    const response = await fetchClients(
-        props.pagination ? props.pagination.page : props.page,
-        props.pagination ? props.pagination.rowsPerPage : props.rowsPerPage,
-    )
-    rows.value = response.data
-    pagination.value.page = response.meta.current_page
-    pagination.value.rowsPerPage = response.meta.per_page
-    pagination.value.rowsNumber = response.meta.total
-}
 </script>
