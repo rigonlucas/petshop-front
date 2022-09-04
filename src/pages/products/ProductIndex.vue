@@ -88,7 +88,7 @@ import ProductService from 'src/features/products/services/ProductService'
 import { ProductModel } from 'src/features/products/models/ProductModel'
 import { findProductEnum } from 'src/enums/ProductsEnum'
 import { findProductUnitEnum } from 'src/enums/ProductsUnitEnum'
-import { notifyNegative } from 'src/utils/Notify'
+import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
 

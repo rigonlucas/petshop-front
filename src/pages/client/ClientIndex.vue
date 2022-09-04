@@ -89,7 +89,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { notifyNegative } from 'src/utils/Notify'
+import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import ClientService from 'src/features/client/services/ClientService'

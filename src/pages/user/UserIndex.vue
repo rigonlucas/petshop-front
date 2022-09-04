@@ -69,7 +69,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { notifyNegative } from 'src/utils/Notify'
+import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import UserService from 'src/features/user/services/UserService'
 import UserModel from 'src/features/user/models/UserModel'

@@ -120,8 +120,12 @@ import useVuelidate from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
 import { AddProductsFormData } from 'src/features/schedule/models/ScheduleForm'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
+import ScheduleService from 'src/features/schedule/services/ScheduleService'
+import axios from 'axios'
+import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 
 interface Props {
+    scheduleId?: number
     products: AddProductsFormData[]
 }
 const props = defineProps<Props>()
@@ -183,6 +187,21 @@ async function handleAddProduct() {
         price: formData.price,
         discount: formData.discount,
     }
+
+    if (props.scheduleId) {
+        try {
+            await ScheduleService.addProduct(props.scheduleId, emitFormData)
+            notifyPositive('Produto adicionado com sucesso')
+        } catch (error) {
+            if (!axios.isAxiosError(error)) {
+                throw error
+            }
+
+            notifyNegative('Não foi possível adicionar produto', error.message)
+            return
+        }
+    }
+
     emit('update:products', [...props.products, emitFormData])
     v$.value.$reset()
     resetForm()
@@ -194,6 +213,27 @@ function resetForm() {
     formData.price = null
     formData.discount = null
 }
+
+async function removeProduct(rowProps: any) {
+    const productsClone = [...props.products]
+
+    if (props.scheduleId && rowProps.row.id) {
+        try {
+            await ScheduleService.removeProduct(props.scheduleId, rowProps.row.id)
+            notifyPositive('Produto removido com sucesso')
+        } catch (error) {
+            if (!axios.isAxiosError(error)) {
+                throw error
+            }
+
+            notifyNegative('Não foi possível remover registro', error.message)
+            return
+        }
+    }
+    productsClone.splice(rowProps.rowIndex, 1)
+    emit('update:products', productsClone)
+}
+
 // List table
 const productsTableColumns = [
     {
@@ -220,12 +260,6 @@ const productsTableColumns = [
         label: 'Ações',
     }
 ]
-
-function removeProduct(rowProps: any) {
-    const productsClone = [...props.products]
-    productsClone.splice(rowProps.rowIndex, 1)
-    emit('update:products', productsClone)
-}
 </script>
 
 <style scoped>

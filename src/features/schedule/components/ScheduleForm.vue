@@ -5,6 +5,7 @@
             v-model:products="formData.products"
             @add-product="handleAddProduct"
             @go-back="closeProducts"
+            :schedule-id="props.id"
         />
         <form
             v-else
@@ -80,7 +81,7 @@ import { required, helpers } from '@vuelidate/validators'
 import { dateFormat } from 'src/utils/validators'
 import useVuelidate from '@vuelidate/core'
 import BaseInput from 'components/Input/BaseInput.vue'
-import { notifyNegative, notifyPositive } from 'src/utils/Notify'
+import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import axios from 'axios'
 import { ApiErrors } from 'src/models/ApiModels'
 import AddProductsForm from 'src/features/schedule/components/AddProductsForm.vue'

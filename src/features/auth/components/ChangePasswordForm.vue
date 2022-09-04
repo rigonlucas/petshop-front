@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import AuthService from 'src/features/auth/services/AuthService'
 import axios from 'axios'
-import { notifyNegative, notifyPositive } from 'src/utils/Notify'
+import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import { reactive, ref } from 'vue'
 import BaseInput from 'components/Input/BaseInput.vue'
 import { useRouter } from 'vue-router'

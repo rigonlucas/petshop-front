@@ -90,7 +90,7 @@
 import { useAuthStore } from 'stores/auth-store'
 import AuthService from 'src/features/auth/services/AuthService'
 import axios from 'axios'
-import { notifyNegative } from 'src/utils/Notify'
+import { notifyNegative } from 'src/utils/NotifyHelper'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseInput from 'components/Input/BaseInput.vue'

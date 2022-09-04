@@ -15,24 +15,14 @@
                             class="q-py-none"
                             :id="schedule.id"
                             :initial-form-data="formInitialData"
-                            @submiting="isSubmiting = true"
+                            show-save-button
                             @success="handleSuccess"
-                            @error="isSubmiting = false"
                         />
                     </div>
                 </div>
             </q-card-section>
 
             <q-card-actions class="bg-white text-teal" align="right">
-                <q-btn
-                    color="primary"
-                    type="submit"
-                    form="schedule-form"
-                    :loading="isSubmiting"
-                    :disable="isSubmiting"
-                >
-                    Salvar
-                </q-btn>
                 <q-btn v-close-popup>Cancelar</q-btn>
             </q-card-actions>
         </q-card>
@@ -42,7 +32,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
-import { defineProps, ref } from 'vue'
+import { defineProps } from 'vue'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import { toDetailedSelectOption } from 'src/utils/ModelToSelectOption'
 import { ClientModel } from 'src/features/client/models/ClientModel'
@@ -79,10 +69,8 @@ function handleHide() {
     router.push({ name: 'schedule.index' })
 }
 
-const isSubmiting = ref(false)
 function handleSuccess() {
     handleHide()
-    isSubmiting.value = false
 }
 
 </script>

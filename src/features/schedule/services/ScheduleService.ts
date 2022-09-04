@@ -57,10 +57,31 @@ export async function get(id: number, params?: {
     return response.data.data as ScheduleModel
 }
 
+interface addProductInput {
+    product_id: number
+    quantity: number
+    price: number
+    discount?: number
+}
+
+export async function addProduct(scheduleId: number, data: addProductInput) {
+    const response = await api.post(`schedule/${scheduleId}/product`, data)
+
+    return response.data
+}
+
+export async function removeProduct(scheduleId: number, productPivotId: number) {
+    const response = await api.delete(`schedule/${scheduleId}/product/${productPivotId}`)
+
+    return response.data
+}
+
 export default {
     list,
     listAvailableProfessionals,
     create,
     edit,
     get,
+    addProduct,
+    removeProduct,
 }
