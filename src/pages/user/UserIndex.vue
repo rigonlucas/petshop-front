@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-lg">
         <q-table
-            title="Produtos"
+            title="Usuários"
             row-key="name"
             :rows="data"
             :columns="columns"
@@ -13,8 +13,8 @@
             </template>
             <template v-slot:top-right>
                 <q-input
-                    v-model="clientName"
-                    placeholder="Nome do cliente"
+                    v-model="userName"
+                    placeholder="Nome do usuário"
                     :debounce="300"
                 >
                     <template v-slot:append>
@@ -22,27 +22,7 @@
                     </template>
                 </q-input>
             </template>
-            <template #body-cell-pets="{ row }: { row: ClientModel }">
-                <q-td v-if=row.pets.length>
-                    <template v-for="(pet, key) in row.pets" :key="key">
-                        <q-chip color="blue" text-color="white" size="sm">
-                            <q-avatar icon="pets"/>
-                            {{ pet.name }}, {{ pet.breed.name }}
-                        </q-chip>
-                    </template>
-                </q-td>
-                <q-td class="text-left" v-else>
-                    <q-item-label caption>
-                        <q-badge color="yellow-6" text-color="black" rounded>
-                            <q-icon
-                                name="warning"
-                            />
-                            Sem pets registrados
-                        </q-badge>
-                    </q-item-label>
-                </q-td>
-            </template>
-            <template #body-cell-options="{ row }: { row: ClientModel }">
+            <template #body-cell-options="{ row }: { row: ProductModel }">
                 <q-td :id="row.id">
                     <div class="flex">
                         <q-btn
@@ -91,11 +71,8 @@
 import { ref, watch } from 'vue'
 import { notifyNegative } from 'src/utils/Notify'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
-import { ClientModel } from 'src/features/client/models/ClientModel'
-import ClientService from 'src/features/client/services/ClientService'
-
-const clientName = ref<string | null>(null)
-watch(clientName, async () => await fetchData())
+import UserService from 'src/features/user/services/UserService'
+import UserModel from 'src/features/user/models/UserModel'
 
 const columns = [
     {
@@ -103,39 +80,25 @@ const columns = [
         label: 'Nome',
         align: 'left',
         field: 'name',
-        sortable: false,
     },
     {
         name: 'email',
         label: 'Email',
         field: 'email',
-        align: 'left',
-        sortable: false,
-    },
-    {
-        name: 'phone',
-        label: 'Contato',
-        field: 'phone',
-        align: 'left',
-        sortable: false,
-    },
-    {
-        name: 'pets',
-        align: 'left',
-        label: 'Pets',
-        field: 'pets',
-        // format: (val: PetModel[]) => val.map(pet => pet.name).join(', '),
-        sortable: false,
+        align: 'center',
+        headerStyle: 'width: 100px',
     },
     {
         name: 'options',
-        align: 'left',
+        align: 'center',
         label: 'Opções',
         field: 'options',
-        sortable: false,
         headerStyle: 'width: 230px',
     },
 ]
+
+const userName = ref<string | null>(null)
+watch(userName, async () => await fetchData())
 
 const {
     fetchData,
@@ -145,14 +108,12 @@ const {
     hasNextPage,
     data,
     isLoading,
-} = await usePaginatedResourceListing<ClientModel>(async (cursor?: string) => {
-    return await ClientService.list({
+} = await usePaginatedResourceListing<UserModel>(async (cursor?: string) => {
+    return await UserService.list({
         cursor,
-        include: ['pets', 'pets.breed'],
-        name: clientName.value,
+        name: userName.value,
     })
 },
 (error) => notifyNegative(error.response && error.response.data.message)
 )
-
 </script>
