@@ -56,12 +56,12 @@ interface Emits {
 
 const emit = defineEmits<Emits>()
 
-const fetchClientsCallback = async (input:string, page: number) => {
-    return await ClientService.list({ name: input, page })
+const fetchClientsCallback = async (input: string, cursor: string) => {
+    return await ClientService.list({ name: input, cursor })
 }
 
-const fetchPetsCallback = async (input:string, page: number) => {
-    return await PetService.list({ name: input, client_id: props.client?.value, include: 'client', page })
+const fetchPetsCallback = async (input:string, cursor: string) => {
+    return await PetService.list({ name: input, client_id: props.client?.value, include: 'client', cursor })
 }
 
 function handleClientSelect(e: DetailedSelectOption<ClientModel> | null) {
@@ -70,6 +70,8 @@ function handleClientSelect(e: DetailedSelectOption<ClientModel> | null) {
 }
 
 function handleSelectPet(e: DetailedSelectOption<PetModel> | null) {
+    console.log(e)
+
     if (e?.details?.client) {
         emit('update:client', {
             label: e.details.client.name,

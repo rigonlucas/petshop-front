@@ -1,6 +1,7 @@
 import { PetModel } from 'src/features/pet/models/PetModel'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import UserModel from 'src/features/user/models/UserModel'
+import { ScheduleHasProductModel } from 'src/features/schedule/models/ScheduleHasProductModel'
 
 export interface ScheduleModel {
     id: number
@@ -19,4 +20,5 @@ export interface ScheduleModel {
     pet: PetModel
     client: ClientModel
     user: UserModel
+    products: ScheduleHasProductModel[]
 }

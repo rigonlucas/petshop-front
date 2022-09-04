@@ -13,6 +13,7 @@
                     <div class="col">
                         <schedule-form
                             class="q-py-none"
+                            show-save-button
                             @submiting="isSubmiting = true"
                             @success="handleSuccess"
                             @error="isSubmiting = false"
@@ -22,16 +23,7 @@
             </q-card-section>
 
             <q-card-actions class="bg-white text-teal" align="right">
-                <q-btn
-                    color="primary"
-                    type="submit"
-                    form="schedule-form"
-                    :loading="isSubmiting"
-                    :disable="isSubmiting"
-                >
-                    Salvar
-                </q-btn>
-                <q-btn v-close-popup>Cancelar</q-btn>
+                <q-btn v-close-popup>Fechar</q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>

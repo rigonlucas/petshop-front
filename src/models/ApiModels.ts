@@ -1,6 +1,6 @@
 export interface MetaResponse {
-    next_cursor?: string
-    prev_cursor?: string
+    next_cursor: string|null
+    prev_cursor: string|null
     path: string
     per_page: number
 }

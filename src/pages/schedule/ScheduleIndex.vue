@@ -88,7 +88,7 @@ async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promi
     const response = await ScheduleService.list({
         start_at_start: format(start, 'yyyy-MM-dd'),
         start_at_end: format(end, 'yyyy-MM-dd'),
-        include: ['user', 'pet', 'client'],
+        include: 'user,pet,client',
     })
 
     return response.data.map(schedule => (

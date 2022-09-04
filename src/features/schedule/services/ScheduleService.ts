@@ -7,10 +7,9 @@ export async function list(params: {
     start_at_start?: string
     start_at_end?: string
     user_id?: string
-    include?: ('user' | 'client' | 'pet')[]
+    include?: string
 }): Promise<PaginatedServerResponse<ScheduleModel>> {
-    const includeAsString = params.include?.join(',')
-    const response = await api.get<PaginatedServerResponse<ScheduleModel>>('schedules', { params: { ...params, include: includeAsString } })
+    const response = await api.get<PaginatedServerResponse<ScheduleModel>>('schedules', { params })
 
     return response.data
 }
@@ -22,8 +21,8 @@ export interface WorkerModel {
 export async function listAvailableProfessionals(params: {
     date_time: string
     duration: number
-}, page: number): Promise<PaginatedServerResponse<WorkerModel>> {
-    const response = await api.get<PaginatedServerResponse<ClientModel>>('schedules/professionals/available', { params: { ...params, page } })
+}, cursor: string): Promise<PaginatedServerResponse<WorkerModel>> {
+    const response = await api.get<PaginatedServerResponse<ClientModel>>('schedules/professionals/available', { params: { ...params, cursor } })
 
     return response.data
 }
@@ -50,8 +49,10 @@ export async function edit(id: number, data: ScheduleInput) {
     return response.data
 }
 
-export async function get(id: number) {
-    const response = await api.get(`schedule/${id}`)
+export async function get(id: number, params?: {
+    include?: string
+}) {
+    const response = await api.get(`schedule/${id}`, { params })
 
     return response.data.data as ScheduleModel
 }

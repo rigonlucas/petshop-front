@@ -57,7 +57,7 @@ const props = defineProps({
     }
 })
 
-const schedule = await ScheduleService.get(Number(props.id))
+const schedule = await ScheduleService.get(Number(props.id), { include: 'user,pet,client,products.product' })
 
 const formInitialData: ScheduleFormData = {
     client: toDetailedSelectOption<ClientModel>({ model: schedule.client }),
@@ -68,8 +68,10 @@ const formInitialData: ScheduleFormData = {
     description: schedule.description,
     type: {
         label: ScheduleTypesLabels[schedule.type],
-        value: schedule.type
+        value: schedule.type,
+        details: schedule.type
     },
+    products: schedule.products
 }
 const router = useRouter()
 

@@ -2,6 +2,7 @@
     <q-select
         outlined
         use-input
+        hide-bottom-space
         input-debounce="0"
         @filter="handleFilterOptions"
         v-bind="$attrs"

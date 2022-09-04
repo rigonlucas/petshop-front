@@ -2,6 +2,7 @@
     <q-select
         outlined
         use-input
+        hide-bottom-space
         input-debounce="200"
         @filter="handleFilter"
         @virtual-scroll="handleOnScroll"
@@ -14,7 +15,7 @@
         <template #no-option="scope">
             <slot name="no-option" v-bind="scope">
                 <q-item style="align-items: center;">
-                    Nenhum usuário encontrado
+                    Nenhum registro encontrado
                 </q-item>
             </slot>
         </template>
@@ -45,7 +46,7 @@ import useSelectAjaxOptions from 'src/composables/select/useSelectAjaxOptions'
 import { PaginatedServerResponse } from 'src/models/ApiModels'
 
 interface Props extends QSelectProps {
-    fetchCallback: (input: string, page: number) => Promise<PaginatedServerResponse<any>>
+    fetchCallback: (input: string, cursor: string|null) => Promise<PaginatedServerResponse<any>>
     errorMsg?: string
 }
 const props = defineProps<Props>()

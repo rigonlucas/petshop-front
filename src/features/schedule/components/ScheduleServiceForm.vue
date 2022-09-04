@@ -134,12 +134,14 @@ function handleDurationInput(value: string) {
     emit('update:duration', valueAsNumber)
 }
 
-const fetchUsersCallback = async (input: string, page: number) => {
+const fetchUsersCallback = async (input: string, cursor: string) => {
     if (!props.start_at || !props.duration) {
         return
     }
     const parsedDate = parse(props.start_at, 'dd/MM/yyyy HH:mm', new Date())
-    return await ScheduleService.listAvailableProfessionals({ date_time: format(parsedDate, 'yyyy-MM-dd HH:mm'), duration: props.duration }, page)
+    return await ScheduleService.listAvailableProfessionals({
+        date_time: format(parsedDate, 'yyyy-MM-dd HH:mm'), duration: props.duration
+    }, cursor)
 }
 
 function handleSelectUser(user: UserModel) {
