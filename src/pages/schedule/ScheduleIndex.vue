@@ -57,6 +57,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { CalendarOptions } from '@fullcalendar/core'
+import listPlugin from '@fullcalendar/list'
 import localePtBr from '@fullcalendar/core/locales/pt-br'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import { differenceInMinutes, format, getDay, isPast } from 'date-fns'
@@ -115,13 +116,19 @@ const router = useRouter()
 
 const calendarOptions: CalendarOptions = {
     locale: localePtBr,
-    initialView: 'timeGridWeek',
+    initialView: 'listDay',
     headerToolbar: {
-        left: '',
+        left: 'prev,next',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,prev,next',
+        right: 'listDay,listWeek,listMonth timeGridDay,timeGridWeek,dayGridMonth',
+    },
+    buttonText: {
+        listDay: 'Dia',
+        listWeek: 'Semana',
+        listMonth: 'Mês',
     },
     plugins: [
+        listPlugin,
         timeGridPlugin,
         dayGridPlugin,
         interactionPlugin,

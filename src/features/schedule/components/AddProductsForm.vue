@@ -87,7 +87,7 @@
                     </template>
                     <template #body-cell-discount="{ row }: { row: AddProductsFormData }">
                         <q-td auto-width>
-                            % {{ row.discount || 0 }}
+                            {{ row.discount || 0 }}%
                         </q-td>
                     </template>
                     <template #body-cell-actions="props">
@@ -180,7 +180,7 @@ async function handleAddProduct() {
         return
     }
 
-    const emitFormData = {
+    const emitFormData: AddProductsFormData = {
         product_id: formData.product.details.id,
         product: formData.product.details,
         quantity: formData.quantity,
@@ -190,8 +190,10 @@ async function handleAddProduct() {
 
     if (props.scheduleId) {
         try {
-            await ScheduleService.addProduct(props.scheduleId, emitFormData)
+            const scheduleProduct = await ScheduleService.addProduct(props.scheduleId, emitFormData)
+            console.log(scheduleProduct)
             notifyPositive('Produto adicionado com sucesso')
+            emitFormData.id = scheduleProduct.id
         } catch (error) {
             if (!axios.isAxiosError(error)) {
                 throw error
@@ -201,10 +203,13 @@ async function handleAddProduct() {
             return
         }
     }
-
-    emit('update:products', [...props.products, emitFormData])
+    emitProductWithNewProduct(emitFormData)
     v$.value.$reset()
     resetForm()
+}
+
+function emitProductWithNewProduct(data: AddProductsFormData) {
+    emit('update:products', [...props.products, data])
 }
 
 function resetForm() {
@@ -216,7 +221,6 @@ function resetForm() {
 
 async function removeProduct(rowProps: any) {
     const productsClone = [...props.products]
-
     if (props.scheduleId && rowProps.row.id) {
         try {
             await ScheduleService.removeProduct(props.scheduleId, rowProps.row.id)

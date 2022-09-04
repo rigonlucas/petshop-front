@@ -22,6 +22,7 @@ export const ScheduleTypesLabels = {
 }
 
 export interface AddProductsFormData {
+    id?: number
     product_id: number|null,
     product: ProductModel|null,
     quantity: number|null,

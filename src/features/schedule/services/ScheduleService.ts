@@ -2,6 +2,7 @@ import { api } from 'boot/axios'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PaginatedServerResponse } from 'src/models/ApiModels'
 import { ScheduleModel } from 'src/features/schedule/models/ScheduleModel'
+import { ScheduleHasProductModel } from 'src/features/schedule/models/ScheduleHasProductModel'
 
 export async function list(params: {
     start_at_start?: string
@@ -65,13 +66,13 @@ interface addProductInput {
 }
 
 export async function addProduct(scheduleId: number, data: addProductInput) {
-    const response = await api.post(`schedule/${scheduleId}/product`, data)
+    const response = await api.post(`schedule/${scheduleId}/products`, data)
 
-    return response.data
+    return response.data.data as ScheduleHasProductModel
 }
 
 export async function removeProduct(scheduleId: number, productPivotId: number) {
-    const response = await api.delete(`schedule/${scheduleId}/product/${productPivotId}`)
+    const response = await api.delete(`schedule/${scheduleId}/products/${productPivotId}`)
 
     return response.data
 }
