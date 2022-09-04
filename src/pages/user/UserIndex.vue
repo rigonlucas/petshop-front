@@ -7,6 +7,7 @@
             :columns="columns"
             :loading="isLoading"
             :rows-per-page-options="[0]"
+            grid
         >
             <template v-slot:loading>
                 <q-inner-loading showing color="primary"/>
@@ -22,26 +23,15 @@
                     </template>
                 </q-input>
             </template>
-            <template #body-cell-options="{ row }: { row: ProductModel }">
-                <q-td :id="row.id">
-                    <div class="flex">
-                        <q-btn
-                            color="primary"
-                            size="xs"
-                            icon="visibility"
-                        />
-                        <q-btn
-                            color="warning"
-                            size="xs"
-                            icon="edit"
-                        />
-                        <q-btn
-                            color="red"
-                            size="xs"
-                            icon="delete"
-                        />
-                    </div>
-                </q-td>
+            <template v-slot:item="props">
+                <div class="q-pa-xs col-lg-3 col-md-4 col-sm-12 col-xs-12 ">
+                    <UserCard
+                        :id="props.row.id"
+                        :name="props.row.name"
+                        :email="props.row.email"
+                        :deleted_at="props.row.deleted_at"
+                    />
+                </div>
             </template>
             <template #pagination>
                 <q-btn
@@ -73,6 +63,7 @@ import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import UserService from 'src/features/user/services/UserService'
 import UserModel from 'src/features/user/models/UserModel'
+import UserCard from 'pages/user/components/UserCard.vue'
 
 const columns = [
     {
@@ -86,14 +77,6 @@ const columns = [
         label: 'Email',
         field: 'email',
         align: 'center',
-        headerStyle: 'width: 100px',
-    },
-    {
-        name: 'options',
-        align: 'center',
-        label: 'Opções',
-        field: 'options',
-        headerStyle: 'width: 230px',
     },
 ]
 
