@@ -1,3 +1,5 @@
+import { RouteRecordRaw } from 'vue-router'
+
 export default [
     {
         path: '/agendamento',
@@ -29,4 +31,4 @@ export default [
             },
         ],
     }
-]
+] as RouteRecordRaw[]

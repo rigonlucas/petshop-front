@@ -99,7 +99,7 @@ const routeBreadcrumbs = computed<BreadcrumbRouteEl[]>(() => {
             return {
                 label: matchedRoute.meta.title ?? '',
                 icon: matchedRoute.meta.icon,
-                to: { name: matchedRoute.name }
+                to: { name: matchedRoute.name, path: matchedRoute.path }
             }
         })
 })

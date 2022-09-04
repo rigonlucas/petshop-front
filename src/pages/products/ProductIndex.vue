@@ -6,7 +6,7 @@
                     type="button"
                     color="primary"
                     icon="add"
-                    :to="{ name: 'products.create' }"
+                    :to="{ name: 'product.create' }"
                 >
                     Adicionar
                 </q-btn>
@@ -36,12 +36,12 @@
             </template>
             <template #body-cell-type="{ row }: { row: ProductModel }">
                 <q-td class="text-center">
-                    {{ findProductEnum(row.type) }}
+                    {{ ProductTypes[row.type] }}
                 </q-td>
             </template>
             <template #body-cell-measurement_unit="{ row }: { row: ProductModel }">
                 <q-td class="text-center">
-                    {{ findProductUnitEnum(row.measurement_unit) }}
+                    {{ ProductUnitEnum[row.measurement_unit] }}
                 </q-td>
             </template>
             <template #body-cell-percentage="{ row }: { row: ProductModel }">
@@ -97,9 +97,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import ProductService from 'src/features/products/services/ProductService'
-import { ProductModel } from 'src/features/products/models/ProductModel'
-import { findProductEnum } from 'src/enums/ProductsEnum'
-import { findProductUnitEnum } from 'src/enums/ProductsUnitEnum'
+import { ProductModel, ProductTypes, ProductUnitEnum } from 'src/features/products/models/ProductModel'
 import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'

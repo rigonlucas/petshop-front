@@ -1,8 +1,14 @@
+import { RouteRecordRaw } from 'vue-router'
+
 export default [
     {
         path: '/auth',
         component: () => import('layouts/AuthLayout.vue'),
         children: [
+            {
+                path: '',
+                redirect: { name: 'auth.login' }
+            },
             {
                 name: 'auth.login',
                 path: 'login',
@@ -19,21 +25,15 @@ export default [
                 props: true,
                 component: () => import('pages/auth/AuthChangePassword.vue'),
             },
+            {
+                name: 'auth.register',
+                path: 'registrar/:code',
+                props: true,
+                component: () => import('pages/auth/AuthRegister.vue'),
+            },
         ],
         meta: {
             onlyGuest: true,
         },
     },
-    {
-        path: '/registrar',
-        component: () => import('layouts/RegisterLayout.vue'),
-        children: [
-            {
-                name: 'auth.register',
-                path: ':code',
-                props: true,
-                component: () => import('pages/auth/AuthRegister.vue'),
-            },
-        ],
-    },
-]
+] as RouteRecordRaw[]

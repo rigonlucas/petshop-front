@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHh lpR fFf" class="flex justify-center" style="align-items: center">
-        <q-card class="q-pa-md" style="width: 600px; max-width: 80vw; height: 500px">
+        <q-card class="q-pa-md" style="width: 600px;">
             <router-view />
         </q-card>
     </q-layout>
