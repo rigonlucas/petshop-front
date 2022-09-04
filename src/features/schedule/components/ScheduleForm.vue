@@ -41,6 +41,14 @@
                             left
                         />
                         Produtos/Serviços
+                        <q-badge
+                            v-if="formData.products.length > 0"
+                            rounded
+                            floating
+                            color="red-10"
+                        >
+                            {{ formData.products.length }}
+                        </q-badge>
                     </q-btn>
                 </div>
             </div>
