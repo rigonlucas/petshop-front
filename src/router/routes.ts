@@ -3,6 +3,7 @@ import clients from 'src/router/routes/clients'
 import schedules from 'src/router/routes/schedules'
 import auth from 'src/router/routes/auth'
 import products from 'src/router/routes/products'
+import users from 'src/router/routes/users'
 
 declare module 'vue-router' {
     interface RouteMeta {
@@ -23,7 +24,8 @@ const routes: RouteRecordRaw[] = [
             { name: 'home', path: '', component: () => import('pages/IndexPage.vue') },
             ...schedules,
             ...clients,
-            ...products
+            ...products,
+            ...users,
         ],
         meta: {
             isProtected: true,
