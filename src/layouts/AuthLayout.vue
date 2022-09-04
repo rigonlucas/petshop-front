@@ -7,46 +7,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import {
-    RouteRecordNormalized,
-    useRoute,
-    RouteLocationRaw
-} from 'vue-router'
-
-type BreadcrumbRouteEl = {
-    label: string
-    icon?: string,
-    to?: RouteLocationRaw,
-
-}
-
-function routeBreadcrumbs(): BreadcrumbRouteEl[] {
-    return useRoute().matched
-        .filter((matchedRoute: RouteRecordNormalized): boolean => !!matchedRoute.meta.title)
-        .map((matchedRoute: RouteRecordNormalized): BreadcrumbRouteEl => {
-            return {
-                label: matchedRoute.meta.title,
-                icon: matchedRoute.meta.icon,
-                to: { name: matchedRoute.name }
-            }
-        })
-}
+import { defineComponent } from 'vue'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
-    name: 'MainLayout',
-
+    name: 'AuthLayout',
     setup() {
-        const leftDrawerOpen = ref(false)
         const route = useRoute()
 
         return {
-            leftDrawerOpen,
-            toggleLeftDrawer() {
-                leftDrawerOpen.value = !leftDrawerOpen.value
-            },
-
-            routeBreadcrumbs: computed<BreadcrumbRouteEl[]>(routeBreadcrumbs),
             route,
         }
     },

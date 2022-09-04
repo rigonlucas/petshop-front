@@ -61,7 +61,9 @@
                 />
             </q-breadcrumbs>
             <Suspense>
-                <router-view/>
+                <q-page class="q-pa-md">
+                    <router-view/>
+                </q-page>
             </Suspense>
         </q-page-container>
     </q-layout>

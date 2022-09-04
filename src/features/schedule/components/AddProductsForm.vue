@@ -90,6 +90,11 @@
                             {{ row.discount || 0 }}%
                         </q-td>
                     </template>
+                    <template #body-cell-final_price="{ row }: { row: AddProductsFormData }">
+                        <q-td auto-width>
+                            {{ formatCurrency(getProductFinalPrice(row)) }}
+                        </q-td>
+                    </template>
                     <template #body-cell-actions="props">
                         <q-td auto-width>
                             <q-btn
@@ -123,10 +128,11 @@ import { formatCurrency } from 'src/utils/CurrencyHelper'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import axios from 'axios'
 import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
+import { ScheduleHasProductModel } from 'src/features/schedule/models/ScheduleHasProductModel'
 
 interface Props {
     scheduleId?: number
-    products: AddProductsFormData[]
+    products: ScheduleHasProductModel[]
 }
 const props = defineProps<Props>()
 
@@ -180,7 +186,7 @@ async function handleAddProduct() {
         return
     }
 
-    const emitFormData: AddProductsFormData = {
+    const emitFormData: ScheduleHasProductModel = {
         product_id: formData.product.details.id,
         product: formData.product.details,
         quantity: formData.quantity,
@@ -260,10 +266,18 @@ const productsTableColumns = [
         label: 'Desconto',
     },
     {
+        name: 'final_price',
+        label: 'Preço final',
+    },
+    {
         name: 'actions',
         label: 'Ações',
     }
 ]
+
+function getProductFinalPrice({ final_price, price, discount, quantity }: ScheduleHasProductModel) {
+    return final_price || (price - ((discount * price) / 100)) * quantity
+}
 </script>
 
 <style scoped>

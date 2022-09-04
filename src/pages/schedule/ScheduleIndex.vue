@@ -1,5 +1,5 @@
 <template>
-    <q-page class="schedule-index">
+    <div>
         <span id="popover-fall-back"/>
         <div class="row">
             <div class="col">
@@ -46,8 +46,7 @@
                 <q-inner-loading showing/>
             </template>
         </Suspense>
-    </q-page>
-
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -116,7 +115,7 @@ const router = useRouter()
 
 const calendarOptions: CalendarOptions = {
     locale: localePtBr,
-    initialView: 'listDay',
+    initialView: 'timeGridWeek',
     headerToolbar: {
         left: 'prev,next',
         center: 'title',
@@ -173,10 +172,6 @@ const calendarOptions: CalendarOptions = {
 </script>
 
 <style scoped>
-.schedule-index {
-    padding-top: 30px;
-}
-
 .schedule-popover {
     height: 100%;
 }

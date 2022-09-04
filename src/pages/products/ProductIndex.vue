@@ -1,5 +1,17 @@
 <template>
-    <div class="q-pa-lg">
+    <div>
+        <div class="row">
+            <div class="col q-pb-sm">
+                <q-btn
+                    type="button"
+                    color="primary"
+                    icon="add"
+                    :to="{ name: 'products.create' }"
+                >
+                    Adicionar
+                </q-btn>
+            </div>
+        </div>
         <q-table
             title="Produtos"
             row-key="name"

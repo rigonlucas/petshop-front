@@ -27,6 +27,7 @@ export interface AddProductsFormData {
     product: ProductModel|null,
     quantity: number|null,
     price: number|null,
+    final_price: number|null,
     discount: number|null,
 }
 
