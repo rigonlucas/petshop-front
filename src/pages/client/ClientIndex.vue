@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-lg">
         <q-table
-            title="Produtos"
+            title="Clientes"
             row-key="name"
             :rows="data"
             :columns="columns"
