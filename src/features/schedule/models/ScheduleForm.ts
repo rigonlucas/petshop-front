@@ -3,7 +3,6 @@ import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 import UserModel from 'src/features/user/models/UserModel'
 import { ProductModel } from 'src/features/products/models/ProductModel'
-import { ScheduleHasProductModel } from 'src/features/schedule/models/ScheduleHasProductModel'
 
 export enum ScheduleTypes {
     VETERINARIAN = 1,

@@ -1,23 +1,38 @@
 export enum ProductTypes {
-    'Serviço' = 1,
-    'Produto' = 2
+    SERVICE = 1,
+    PRODUCT = 2,
+}
+export const ProductTypesLabels = {
+    [ProductTypes.SERVICE]: 'Serviço',
+    [ProductTypes.PRODUCT]: 'Produto',
+} as {
+    [key: number]: string
 }
 
-export enum ProductUnitEnum{
-    'un' = 1,
-    'kg' = 2,
-    'l' = 3,
-    'gm' = 4,
-    'ml' = 5
+export enum ProductMeasurementUnit {
+    UN = 1,
+    KG = 2,
+    L = 3,
+    GM = 4,
+    ML = 5
+}
+export const ProductMeasurementUnitLabels = {
+    [ProductMeasurementUnit.UN]: 'un',
+    [ProductMeasurementUnit.KG]: 'kg',
+    [ProductMeasurementUnit.L]: 'l',
+    [ProductMeasurementUnit.GM]: 'gm',
+    [ProductMeasurementUnit.ML]: 'ml',
+} as {
+    [key: number]: string
 }
 
 export interface ProductModel {
     id: number,
     account_id: number,
     name: string,
-    description: string,
+    description: string|null,
     validate: string,
-    type: number,
+    type: ProductTypes,
     measurement_unit: number,
     cost: number,
     price: number,

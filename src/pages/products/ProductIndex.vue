@@ -36,12 +36,12 @@
             </template>
             <template #body-cell-type="{ row }: { row: ProductModel }">
                 <q-td class="text-center">
-                    {{ ProductTypes[row.type] }}
+                    {{ ProductTypesLabels[row.type] }}
                 </q-td>
             </template>
             <template #body-cell-measurement_unit="{ row }: { row: ProductModel }">
                 <q-td class="text-center">
-                    {{ ProductUnitEnum[row.measurement_unit] }}
+                    {{ ProductMeasurementUnitLabels[row.measurement_unit] }}
                 </q-td>
             </template>
             <template #body-cell-percentage="{ row }: { row: ProductModel }">
@@ -97,7 +97,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import ProductService from 'src/features/products/services/ProductService'
-import { ProductModel, ProductTypes, ProductUnitEnum } from 'src/features/products/models/ProductModel'
+import { ProductModel, ProductTypesLabels, ProductMeasurementUnitLabels } from 'src/features/products/models/ProductModel'
 import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
