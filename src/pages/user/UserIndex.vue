@@ -30,6 +30,7 @@
                         :name="props.row.name"
                         :email="props.row.email"
                         :deleted_at="props.row.deleted_at"
+                        @update:user="fetchData"
                     />
                 </div>
             </template>
