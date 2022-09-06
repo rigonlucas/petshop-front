@@ -1,12 +1,6 @@
 <template>
     <q-card class="my-card" flat bordered>
-        <q-img
-            height="140px"
-            src="https://cdn.quasar.dev/img/parallax1.jpg"
-        />
-
         <q-card-section>
-            <div class="text-overline text-orange-9">Usuário</div>
             <div class="text-h5 q-mt-sm q-mb-xs text-center">{{ props.name }}</div>
             <div class="text-center">{{ props.email }}</div>
         </q-card-section>
@@ -33,13 +27,27 @@
         </q-card-actions>
     </q-card>
 
-    <q-dialog v-model="confirm" persistent>
+    <q-dialog v-model="confirm" transition-show="scale" transition-hide="scale">
         <q-card>
-            <q-card-section class="row items-center">
-                <q-avatar :icon="iconStatusUser()" :color="colorStatusUser()" text-color="white" />
-                <span class="q-ml-sm">
-                    {{ messageStatusUser() }} <strong>{{ props.name }}</strong>?
-                </span>
+            <q-card :class="['bg-'+colorStatusUser()+'-6', 'text-white']">
+                <q-card-section>
+                    <div class="text-h6">
+                        <q-icon :name="iconStatusUser()"></q-icon>
+                        {{ labelDialog() }}
+                    </div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    <span class="q-ml-sm">
+                        <strong>{{ props.name }}</strong>
+                    </span>
+                </q-card-section>
+            </q-card>
+            <q-card-section v-if="!props.deleted_at">
+                Ao inativar a conta, a ativação da mesma só poderá ser realizada em 30 dias
+            </q-card-section>
+            <q-card-section v-else>
+                Para ativar a conta, é necessário aguardar 30 dias após a desativação
             </q-card-section>
 
             <q-card-actions align="right">
@@ -88,6 +96,13 @@ const messageStatusUser = () => {
         return 'Ativar a conta de'
     }
     return 'Inativar a conta de'
+}
+
+const labelDialog = () => {
+    if (props.deleted_at) {
+        return 'Ativar'
+    }
+    return 'Inativar'
 }
 
 const iconStatusUser = () => {
