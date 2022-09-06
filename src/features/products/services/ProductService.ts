@@ -16,6 +16,21 @@ export async function list(params: any): Promise<PaginatedServerResponse<Product
     return response.data
 }
 
+interface ProductInput {
+    name: string
+    description?: string|null
+    type: number
+    cost?: number|null
+    price: number
+    measurement_unit: number
+}
+
+export async function create(product: ProductInput) {
+    const response = await api.post('product', product)
+
+    return response.data as ProductModel
+}
 export default {
     list,
+    create
 }
