@@ -24,7 +24,7 @@
                 </q-input>
             </template>
             <template v-slot:item="props">
-                <div class="q-pa-xs col-lg-2 col-md-4 col-sm-12 col-xs-12 ">
+                <div class="q-pa-xs col-lg-3 col-md-4 col-sm-12 col-xs-12 ">
                     <UserCard
                         :id="props.row.id"
                         :name="props.row.name"

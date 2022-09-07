@@ -47,12 +47,21 @@
                 Ao inativar a conta, a ativação da mesma só poderá ser realizada em 30 dias
             </q-card-section>
             <q-card-section v-else>
-                Para ativar a conta, é necessário aguardar 30 dias após a desativação
+                Para ativar a conta, é necessário aguardar 30 dias após a desativação.
+                <div class="d-block text-center" v-if="diffInDays >= 0">
+                    <h6>{{ daysToActiveUser() }}</h6>
+                </div>
             </q-card-section>
 
             <q-card-actions align="right">
                 <q-btn flat label="Não" color="primary" v-close-popup />
-                <q-btn flat size="small" :label="labelStatusUser()" :color="colorStatusUser()" @click="handleChangeStatus"/>
+                <q-btn
+                    flat size="small"
+                    :label="labelStatusUser()"
+                    :color="colorStatusUser()"
+                    :disable="props.deleted_at !== null && diffInDays > 0"
+                    @click="handleChangeStatus"
+                />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -65,6 +74,7 @@ import { useAuthStore } from 'stores/auth-store'
 import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import axios from 'axios'
 import UserService from 'src/features/user/services/UserService'
+import { addDays, differenceInDays } from 'date-fns'
 
 const props = defineProps({
     id: {
@@ -85,24 +95,29 @@ const authStore = useAuthStore()
 const authUserId = ref(authStore.getUser?.id)
 const confirm = ref(false)
 const isLoading = ref(false)
-interface Emits {
+const diffInDays = ref(null)
+    interface Emits {
     (event: 'update:user'): void
 }
 
 const emit = defineEmits<Emits>()
-
-const messageStatusUser = () => {
-    if (props.deleted_at) {
-        return 'Ativar a conta de'
-    }
-    return 'Inativar a conta de'
-}
 
 const labelDialog = () => {
     if (props.deleted_at) {
         return 'Ativar'
     }
     return 'Inativar'
+}
+
+const daysToActiveUser = () => {
+    diffInDays.value = differenceInDays(addDays(new Date(props.deleted_at), 30), new Date())
+    if (diffInDays.value > 0) {
+        return `Restam ${diffInDays.value} dias`
+    }
+
+    if (diffInDays.value === 0) {
+        return `Resta ${diffInDays.value} dia`
+    }
 }
 
 const iconStatusUser = () => {
@@ -130,7 +145,7 @@ async function handleChangeStatus() {
     isLoading.value = true
     try {
         await UserService.changeStatus(props.id)
-        notifyPositive('Usuário inativo')
+        notifyPositive('Conta atualizada')
         confirm.value = false
         emit('update:user')
     } catch (error: unknown) {
