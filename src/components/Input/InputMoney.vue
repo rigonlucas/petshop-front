@@ -5,9 +5,8 @@
         :error="!!errorMsg"
         :error-message="errorMsg"
         v-bind="$attrs"
-        mask="##,##"
-        :model-value="modelValue"
-        @update:model-value="handleInput"
+        :model-value="formattedValue"
+        ref="inputRef"
     >
         <template #prepend>
             <slot name="prepend">
@@ -29,21 +28,27 @@ export default {
 import { defineProps } from 'vue/dist/vue'
 import { QInputProps } from 'quasar'
 import { defineEmits } from 'vue'
+import { CurrencyDisplay, useCurrencyInput } from 'vue-currency-input'
 
 interface Props extends QInputProps {
     errorMsg?: string
-    modelValue: number|null
+    modelValue: string|number|null
 }
 defineProps<Props>()
-const emit = defineEmits(['update:modelValue'])
+defineEmits(['update:modelValue'])
 
-function handleInput(value: string) {
-    const valueAsFloat = parseFloat(value.replace(',', '.').replace('R$ ', ''))
-    if (isNaN(valueAsFloat)) {
-        return emit('update:modelValue', null)
-    }
-    emit('update:modelValue', valueAsFloat)
-}
+const { inputRef, formattedValue } = useCurrencyInput({
+    currency: 'BRL',
+    currencyDisplay: CurrencyDisplay.hidden,
+    precision: 2,
+    hideCurrencySymbolOnFocus: true,
+    hideGroupingSeparatorOnFocus: false,
+    hideNegligibleDecimalDigitsOnFocus: false,
+    autoDecimalDigits: true,
+    useGrouping: true,
+    accountingSign: false
+})
+
 </script>
 
 <style scoped>
