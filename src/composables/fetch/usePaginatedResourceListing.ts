@@ -3,16 +3,16 @@ import { computed, ref, UnwrapRef } from 'vue'
 import axios, { AxiosError } from 'axios'
 
 export default async function usePaginatedResourceListing<ModelResource>(
-    fetchCallback: (cursor?: string) => Promise<PaginatedServerResponse<ModelResource>>,
+    fetchCallback: (cursor?: string|null) => Promise<PaginatedServerResponse<ModelResource>>,
     onError?: (error: AxiosError) => void
 ) {
     const data = ref<ModelResource[]>([])
     const meta = ref<MetaResponse|null>(null)
-    const previousCursor = ref<string>()
-    const nextCursor = ref<string>()
+    const previousCursor = ref<string|null>()
+    const nextCursor = ref<string|null>()
     const isLoading = ref<boolean>(false)
 
-    async function fetchData(cursor?: string) {
+    async function fetchData(cursor?: string|null) {
         isLoading.value = true
         try {
             const response = await fetchCallback(cursor)

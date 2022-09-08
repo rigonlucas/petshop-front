@@ -28,6 +28,13 @@
             </slot>
         </template>
 
+        <template #prepend>
+            <slot name="prepend" />
+        </template>
+        <template #append>
+            <slot name="append" />
+        </template>
+
         <template #error>
             <div v-for="error in errors" :key="error">{{ error }}</div>
         </template>

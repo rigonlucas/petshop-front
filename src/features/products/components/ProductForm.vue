@@ -98,7 +98,7 @@ const props = defineProps<{
 interface Emits {
     (event: 'submiting'): void
     (event: 'error'): void
-    (event: 'success'): void
+    (event: 'success', value: ProductModel): void
 }
 const emit = defineEmits<Emits>()
 
@@ -146,15 +146,16 @@ async function handleSubmit() {
     }
     try {
         isLoading.value = true
+        let product = null
         if (props.id) {
-            await ProductService.update(props.id, submitData)
+            product = await ProductService.update(props.id, submitData)
             notifyPositive('Produto atualizado com sucesso')
         } else {
-            await ProductService.create(submitData)
+            product = await ProductService.create(submitData)
             notifyPositive('Produto cadastrado com sucesso')
         }
 
-        emit('success')
+        emit('success', product)
     } catch (error) {
         if (!axios.isAxiosError(error)) {
             throw error

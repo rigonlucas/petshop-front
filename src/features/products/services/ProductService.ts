@@ -34,13 +34,13 @@ export async function get(id: number) {
 export async function create(product: ProductInput) {
     const response = await api.post('product', product)
 
-    return response.data as ProductModel
+    return response.data.data as ProductModel
 }
 
 export async function update(id: number, product: ProductInput) {
     const response = await api.put(`product/${id}`, product)
 
-    return response.data as ProductModel
+    return response.data.data as ProductModel
 }
 
 export default {

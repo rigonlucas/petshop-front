@@ -51,11 +51,19 @@
                     :to="route.to"
                 />
             </q-breadcrumbs>
-            <Suspense>
-                <q-page class="q-pa-md">
+            <q-page class="q-pa-md">
+                <Suspense>
                     <router-view/>
-                </q-page>
-            </Suspense>
+                    <template #fallback>
+                        <q-inner-loading
+                            color="primary"
+                            size="5em"
+                            showing
+                        />
+                    </template>
+                </Suspense>
+            </q-page>
+
         </q-page-container>
     </q-layout>
 </template>
