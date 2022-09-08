@@ -10,16 +10,7 @@
                     aria-label="Menu"
                     @click="toggleLeftDrawer"
                 />
-
-                <q-toolbar-title>
-                    Petshop
-                </q-toolbar-title>
-                <q-btn
-                    @click="handleLogout"
-                    outline
-                >
-                    Sair
-                </q-btn>
+                <top-menu/>
             </q-toolbar>
         </q-header>
         <q-ajax-bar
@@ -79,6 +70,7 @@ import {
 import { useAuthStore } from 'stores/auth-store'
 import AuthService from 'src/features/auth/services/AuthService'
 import LeftMenu from 'layouts/menus/LeftMenu.vue'
+import TopMenu from 'layouts/menus/TopMenu.vue'
 
 const leftDrawerOpen = ref(false)
 function toggleLeftDrawer() {
@@ -106,6 +98,8 @@ const routeBreadcrumbs = computed<BreadcrumbRouteEl[]>(() => {
 
 const authStore = useAuthStore()
 authStore.checkSession()
+
+const accountStore = authStore.getUser
 
 async function handleLogout() {
     await AuthService.logout()

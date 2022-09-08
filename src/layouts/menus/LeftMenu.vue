@@ -1,6 +1,15 @@
 <template>
     <div>
         <q-list padding style="margin-top: 150px;">
+            <q-item clickable v-ripple :to="{ name: 'home' }">
+                <q-item-section avatar>
+                    <q-icon name="dashboard"/>
+                </q-item-section>
+
+                <q-item-section>
+                    Dashboard
+                </q-item-section>
+            </q-item>
             <q-item clickable v-ripple :to="{ name: 'schedule.index' }">
                 <q-item-section avatar>
                     <q-icon name="calendar_today"/>
@@ -26,15 +35,6 @@
 
                 <q-item-section>
                     Produtos
-                </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple :to="{ name: 'users.index' }">
-                <q-item-section avatar>
-                    <q-icon name="manage_accounts"/>
-                </q-item-section>
-
-                <q-item-section>
-                    Usuários
                 </q-item-section>
             </q-item>
         </q-list>
