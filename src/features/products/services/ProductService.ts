@@ -25,12 +25,27 @@ interface ProductInput {
     measurement_unit: number
 }
 
+export async function get(id: number) {
+    const response = await api.get(`product/${id}`)
+
+    return response.data.data as ProductModel
+}
+
 export async function create(product: ProductInput) {
     const response = await api.post('product', product)
 
     return response.data as ProductModel
 }
+
+export async function update(id: number, product: ProductInput) {
+    const response = await api.put(`product/${id}`, product)
+
+    return response.data as ProductModel
+}
+
 export default {
     list,
-    create
+    get,
+    create,
+    update,
 }

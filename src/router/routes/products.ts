@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import { RouteLocation, RouteRecordRaw } from 'vue-router'
 
 export default [
     {
@@ -20,6 +20,16 @@ export default [
                 meta: {
                     title: 'Novo',
                     icon: 'add',
+                },
+            },
+            {
+                name: 'product.edit',
+                path: 'editar/:id',
+                component: () => import('pages/products/ProductEdit.vue'),
+                props: (route: RouteLocation) => ({ id: parseInt(route.params.id as string) }),
+                meta: {
+                    title: 'Editar',
+                    icon: 'edit',
                 },
             },
         ],

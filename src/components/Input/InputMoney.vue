@@ -27,17 +27,17 @@ export default {
 <script setup lang="ts">
 import { defineProps } from 'vue/dist/vue'
 import { QInputProps } from 'quasar'
-import { defineEmits } from 'vue'
+import { defineEmits, watch } from 'vue'
 import { CurrencyDisplay, useCurrencyInput } from 'vue-currency-input'
 
 interface Props extends QInputProps {
     errorMsg?: string
-    modelValue: string|number|null
+    modelValue: number|null
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits(['update:modelValue'])
 
-const { inputRef, formattedValue } = useCurrencyInput({
+const { inputRef, formattedValue, setValue } = useCurrencyInput({
     currency: 'BRL',
     currencyDisplay: CurrencyDisplay.hidden,
     precision: 2,
@@ -46,9 +46,12 @@ const { inputRef, formattedValue } = useCurrencyInput({
     hideNegligibleDecimalDigitsOnFocus: false,
     autoDecimalDigits: true,
     useGrouping: true,
-    accountingSign: false
+    accountingSign: false,
 })
 
+watch(() => props.modelValue, (value) => {
+    setValue(value)
+})
 </script>
 
 <style scoped>

@@ -49,25 +49,19 @@
                     {{ calcProductProfit(row.cost, row.price) }}%
                 </q-td>
             </template>
-            <template #body-cell-options="{ row }: { row: ProductModel }">
-                <q-td :id="row.id">
-                    <div class="flex">
-                        <q-btn
-                            color="primary"
-                            size="xs"
-                            icon="visibility"
-                        />
-                        <q-btn
-                            color="warning"
-                            size="xs"
-                            icon="edit"
-                        />
-                        <q-btn
-                            color="red"
-                            size="xs"
-                            icon="delete"
-                        />
-                    </div>
+            <template #body-cell-actions="{ row }: { row: ProductModel }">
+                <q-td auto-width>
+                    <q-btn
+                        color="warning"
+                        size="xs"
+                        icon="edit"
+                        @click="redirectToEdit(row)"
+                    />
+                    <q-btn
+                        color="red"
+                        size="xs"
+                        icon="delete"
+                    />
                 </q-td>
             </template>
             <template #pagination>
@@ -101,6 +95,9 @@ import { ProductModel, ProductTypesLabels, ProductMeasurementUnitLabels } from '
 import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const columns = [
     {
@@ -147,11 +144,10 @@ const columns = [
         headerStyle: 'width: 100px',
     },
     {
-        name: 'options',
+        name: 'actions',
         align: 'center',
-        label: 'Opções',
-        field: 'options',
-        headerStyle: 'width: 230px',
+        label: 'Ações',
+        field: 'actions',
     },
 ]
 
@@ -180,5 +176,9 @@ function calcProductProfit(cost: number, price: number): number {
         return 0
     }
     return Math.round(((cost * 100) / price - 100) * -1)
+}
+
+function redirectToEdit(row: ProductModel) {
+    router.push({ name: 'product.edit', params: { id: row.id } })
 }
 </script>

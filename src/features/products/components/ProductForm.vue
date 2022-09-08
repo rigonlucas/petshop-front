@@ -40,13 +40,13 @@
             <div class="col col-md-6">
                 <input-money
                     label="Custo"
-                    v-model:model-value="formData.cost"
+                    v-model="formData.cost"
                 />
             </div>
             <div class="col col-md-6">
                 <input-money
                     label="Preço"
-                    v-model:model-value="formData.price"
+                    v-model="formData.price"
                     :error-msg="v$.name.$errors[0]?.$message"
                 />
             </div>
@@ -54,6 +54,8 @@
         <q-btn
             color="primary"
             type="submit"
+            :loading="isLoading"
+            :disable="isLoading"
         >
             Salvar
         </q-btn>
@@ -61,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import {
     ProductModel,
     ProductTypes,
@@ -76,6 +78,8 @@ import InputMoney from 'components/Input/InputMoney.vue'
 import useVuelidate from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
 import ProductService from 'src/features/products/services/ProductService'
+import axios from 'axios'
+import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 
 interface ProductFormData {
     name?: string|null
@@ -105,7 +109,7 @@ const formData = reactive<ProductFormData>({
         label: ProductTypesLabels[props.initialFormData?.type || ProductTypes.PRODUCT],
         value: props.initialFormData?.type || ProductTypes.PRODUCT
     },
-    cost: props.initialFormData?.cost || 0,
+    cost: props.initialFormData?.cost || null,
     price: props.initialFormData?.price || null,
     measurement_unit: {
         label: ProductMeasurementUnitLabels[props.initialFormData?.measurement_unit || ProductMeasurementUnit.UN],
@@ -124,21 +128,42 @@ const formRules = {
 }
 const v$ = useVuelidate<ProductFormData>(formRules, formData)
 
+const isLoading = ref<boolean>(false)
 async function handleSubmit() {
     v$.value.$touch()
+    console.log('aaa')
     const valid = await v$.value.$validate()
     if (!valid) {
         return
     }
-
-    await ProductService.create({
+    const submitData = {
         name: formData.name,
         description: formData.description,
         type: formData.type?.value,
         measurement_unit: formData.measurement_unit?.value,
         cost: formData.cost,
         price: formData.price,
-    })
+    }
+    try {
+        isLoading.value = true
+        if (props.id) {
+            await ProductService.update(props.id, submitData)
+            notifyPositive('Produto atualizado com sucesso')
+        } else {
+            await ProductService.create(submitData)
+            notifyPositive('Produto cadastrado com sucesso')
+        }
+
+        emit('success')
+    } catch (error) {
+        if (!axios.isAxiosError(error)) {
+            throw error
+        }
+
+        notifyNegative(error.response && error.response.data.message)
+    } finally {
+        isLoading.value = false
+    }
 }
 </script>
 

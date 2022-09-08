@@ -197,7 +197,6 @@ async function handleAddProduct() {
     if (props.scheduleId) {
         try {
             const scheduleProduct = await ScheduleService.addProduct(props.scheduleId, emitFormData)
-            console.log(scheduleProduct)
             notifyPositive('Produto adicionado com sucesso')
             emitFormData.id = scheduleProduct.id
         } catch (error) {
