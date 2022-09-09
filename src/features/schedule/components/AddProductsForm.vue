@@ -22,7 +22,16 @@
                     @update:model-value="handleSetProduct"
                     :fetch-callback="fetchProductsCallback"
                     :error-msg="v$.product.$errors[0]?.$message"
-                />
+                >
+                    <template #prepend>
+                        <q-btn
+                            icon="add_circle"
+                            round
+                            color="primary"
+                            @click.prevent.stop="showNewProduct = true"
+                        ></q-btn>
+                    </template>
+                </base-async-select>
             </div>
             <div class="col-12 col-md-2">
                 <base-input
@@ -110,12 +119,28 @@
                 </q-table>
             </div>
         </div>
+        <q-dialog
+            v-model="showNewProduct" position="bottom"
+        >
+            <q-card>
+                <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6">Novo propduto</div>
+                    <q-space />
+                    <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+                <q-card-section>
+                    <product-form
+                        @success="handleNewProductSuccess"
+                    />
+                </q-card-section>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
 import BaseAsyncSelect from 'src/components/Select/BaseAsyncSelect.vue'
-import { defineEmits, defineProps, reactive } from 'vue'
+import { defineEmits, defineProps, reactive, ref } from 'vue'
 import ProductService from 'src/features/products/services/ProductService'
 import BaseInput from 'components/Input/BaseInput.vue'
 import InputMoney from 'components/Input/InputMoney.vue'
@@ -129,6 +154,7 @@ import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import axios from 'axios'
 import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import { ScheduleHasProductModel } from 'src/features/schedule/models/ScheduleHasProductModel'
+import ProductForm from 'src/features/products/components/ProductForm.vue'
 
 interface Props {
     scheduleId?: number
@@ -145,7 +171,7 @@ const emit = defineEmits<Emits>()
 function goBack() {
     emit('go-back')
 }
-
+const showNewProduct = ref<boolean>(false)
 const formData = reactive<{
     product: DetailedSelectOption<ProductModel>|null,
     quantity: number|null,
@@ -276,6 +302,15 @@ const productsTableColumns = [
 
 function getProductFinalPrice({ final_price, price, discount, quantity }: ScheduleHasProductModel) {
     return final_price || (price - ((discount * price) / 100)) * quantity
+}
+
+function handleNewProductSuccess(product: ProductModel) {
+    formData.product = {
+        label: product.name,
+        value: product.id,
+        details: product,
+    }
+    showNewProduct.value = false
 }
 </script>
 
