@@ -39,19 +39,19 @@
             </q-img>
         </q-drawer>
 
-        <q-page-container class="q-ma-md" :key="route.path">
-            <q-breadcrumbs>
-                <q-breadcrumbs-el label="Início" icon="home" :to="{ name: 'home' }"/>
-
-                <q-breadcrumbs-el
-                    v-for="route in routeBreadcrumbs"
-                    :key="route.label"
-                    :label="route.label"
-                    :icon="route.icon"
-                    :to="route.to"
-                />
-            </q-breadcrumbs>
+        <q-page-container :key="route.path">
             <q-page class="q-pa-md">
+                <q-breadcrumbs class="q-mb-md">
+                    <q-breadcrumbs-el label="Início" icon="home" :to="{ name: 'home' }"/>
+
+                    <q-breadcrumbs-el
+                        v-for="route in routeBreadcrumbs"
+                        :key="route.label"
+                        :label="route.label"
+                        :icon="route.icon"
+                        :to="route.to"
+                    />
+                </q-breadcrumbs>
                 <Suspense>
                     <router-view/>
                     <template #fallback>

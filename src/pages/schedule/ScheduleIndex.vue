@@ -1,8 +1,27 @@
 <template>
     <div>
         <span id="popover-fall-back"/>
-        <div class="row">
-            <div class="col">
+        <q-popup-proxy
+            :model-value="showPopup"
+            :target="menuTarget"
+            :anchor="popupPosition.anchor"
+            :self="popupPosition.self"
+            :cover="popupPosition.cover"
+            class="schedule-popover q-pa-sm"
+            @before-hide="handleHiddenMenu"
+            max-height="800px"
+        >
+            <div class="bg-white q-pa-sm">
+                <schedule-form
+                    :initial-form-data="prefilledScheduleData"
+                    show-save-button
+                    @success="handleCreatedSchedule"
+                />
+            </div>
+        </q-popup-proxy>
+
+        <div class="column">
+            <div class="col-2">
                 <q-btn
                     type="button"
                     color="primary"
@@ -12,27 +31,41 @@
                     Adicionar
                 </q-btn>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <q-popup-proxy
-                    :model-value="showPopup"
-                    :target="menuTarget"
-                    :anchor="popupPosition.anchor"
-                    :self="popupPosition.self"
-                    :cover="popupPosition.cover"
-                    class="schedule-popover q-pa-sm"
-                    @before-hide="handleHiddenMenu"
-                    max-height="800px"
-                >
-                    <div class="bg-white q-pa-sm">
-                        <schedule-form
-                            :initial-form-data="prefilledScheduleData"
-                            show-save-button
-                            @success="handleCreatedSchedule"
+            <div class="col-10 q-pt-sm" style="height: calc(100vh - 160px)">
+                <div class="row q-pb-sm" style="align-items: end;">
+                    <div class="col-12 col-sm-4 q-gutter-sm">
+                        <q-btn
+                            type="button"
+                            color="primary"
+                            class="q-mr-md"
+                            @click="goToday"
+                        >
+                            Hoje
+                        </q-btn>
+
+                        <q-btn
+                            type="button"
+                            @click="goPrevious"
+                        >
+                            <q-icon name="chevron_left"/>
+                        </q-btn>
+                        <q-btn
+                            type="button"
+                            @click="goNext"
+                        >
+                            <q-icon name="chevron_right"/>
+                        </q-btn>
+                    </div>
+                    <div class="col-12 col-sm-4 ">
+                        <p class="text-h5">{{ currentDateString }}</p>
+                    </div>
+                    <div class="col-12 flex justify-end col-sm-4">
+                        <select-callendar-view
+                            :current-view="scheduleStore.selectedView"
+                            @change-view="changeView"
                         />
                     </div>
-                </q-popup-proxy>
+                </div>
                 <full-calendar
                     ref="calendar"
                     :options="calendarOptions"
@@ -40,6 +73,7 @@
                 </full-calendar>
             </div>
         </div>
+
         <Suspense>
             <router-view/>
             <template #fallback>
@@ -66,22 +100,25 @@ import { reactive, ref } from 'vue'
 
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
 import { useSchedulePopup } from 'pages/schedule/composables/useSchedulePopup'
+import SelectCallendarView from 'pages/schedule/SelectCallendarView.vue'
+import { useScheduleStore } from 'stores/schedule'
+import { useCalendar } from 'pages/schedule/composables/UseCalendar'
 
-// function handleDateClick(e) {
-//     console.log({ click: e })
-// }
-// const router = useRouter()
+const router = useRouter()
+const scheduleStore = useScheduleStore()
+const calendar = ref<InstanceType<typeof FullCalendar>>()
 
 const prefilledScheduleData = reactive<ScheduleFormData>({
     start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
     duration: 30,
 })
+
 function handleCreatedSchedule() {
     showPopup.value = false
     if (!calendar.value) {
         return
     }
-    calendar.value.getApi().refetchEvents()
+    calendar.value?.getApi().refetchEvents()
 }
 
 async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promise<EventInput[]> {
@@ -102,7 +139,6 @@ async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promi
     ))
 }
 
-const calendar = ref<InstanceType<typeof FullCalendar>>()
 const {
     handleHiddenMenu,
     handleSelect,
@@ -111,21 +147,19 @@ const {
     popupPosition,
 } = useSchedulePopup(calendar)
 
-const router = useRouter()
+const {
+    goPrevious,
+    goNext,
+    goToday,
+    changeView,
+    currentDateString
+} = useCalendar(calendar)
 
 const calendarOptions: CalendarOptions = {
     locale: localePtBr,
-    initialView: 'timeGridWeek',
-    headerToolbar: {
-        left: 'prev,next',
-        center: 'title',
-        right: 'listDay,listWeek,listMonth timeGridDay,timeGridWeek,dayGridMonth',
-    },
-    buttonText: {
-        listDay: 'Dia',
-        listWeek: 'Semana',
-        listMonth: 'Mês',
-    },
+    initialView: scheduleStore.selectedView,
+    height: '100%',
+    headerToolbar: false,
     plugins: [
         listPlugin,
         timeGridPlugin,
@@ -138,11 +172,6 @@ const calendarOptions: CalendarOptions = {
     weekends: true,
     firstDay: getDay(new Date()),
     events: fetchSchedules,
-    // events: 'https://fullcalendar.io/api/demo-feeds/events.json',
-    // dateClick: handleDateClick,
-    // dateClick: (e) => {
-    //     console.log(e)
-    // },
     eventClick: (e) => {
         const eventId = e.event.extendedProps.id
         if (!eventId) {
@@ -159,19 +188,10 @@ const calendarOptions: CalendarOptions = {
         prefilledScheduleData.duration = differenceInMinutes(e.end, e.start)
         handleSelect(e)
     },
-    // unselect: (e) => {
-    //     // console.log({ unselecto: e })
-    //     // nextTick(() => {
-    //     //     showPopup.value = false
-    //     //     menuTarget.value = '#menu-fall-back'
-    //     // })
-    // }
-    // eventMouseEnter: (e) => e.el.classList.add('shadow-3'),
-    // eventMouseLeave: (e) => e.el.classList.remove('shadow-3'),
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .schedule-popover {
     height: 100%;
 }
