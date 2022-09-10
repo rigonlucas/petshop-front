@@ -52,11 +52,7 @@
                         icon="edit"
                         @click="redirectToEdit(row)"
                     />
-                    <q-btn
-                        color="red"
-                        size="xs"
-                        icon="delete"
-                    />
+                    <DeleteProduct @update:products="fetchData" :name="row.name" :id="row.id"/>
                 </q-td>
             </template>
             <template #pagination>
@@ -91,6 +87,7 @@ import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
 import { useRouter } from 'vue-router'
+import DeleteProduct from 'pages/products/components/DeleteProduct.vue'
 
 const router = useRouter()
 

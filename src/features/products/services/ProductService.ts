@@ -30,6 +30,12 @@ export async function get(id: number) {
     return response.data.data as ProductModel
 }
 
+export async function remove(id: number) {
+    const response = await api.delete(`product/${id}`)
+
+    return response.data.data as ProductModel
+}
+
 export async function create(product: ProductInput) {
     const response = await api.post('product', product)
 
@@ -47,4 +53,5 @@ export default {
     get,
     create,
     update,
+    remove,
 }
