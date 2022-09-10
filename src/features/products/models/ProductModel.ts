@@ -33,7 +33,6 @@ export interface ProductModel {
     description: string|null,
     validate: string,
     type: ProductTypes,
-    measurement_unit: number,
     cost: number,
     price: number,
     created_at: string,

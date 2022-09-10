@@ -39,11 +39,6 @@
                     {{ ProductTypesLabels[row.type] }}
                 </q-td>
             </template>
-            <template #body-cell-measurement_unit="{ row }: { row: ProductModel }">
-                <q-td class="text-center">
-                    {{ ProductMeasurementUnitLabels[row.measurement_unit] }}
-                </q-td>
-            </template>
             <template #body-cell-percentage="{ row }: { row: ProductModel }">
                 <q-td class="text-center">
                     {{ calcProductProfit(row.cost, row.price) }}%
@@ -110,13 +105,6 @@ const columns = [
         name: 'type',
         label: 'Tipo',
         field: 'type',
-        align: 'center',
-        headerStyle: 'width: 100px',
-    },
-    {
-        name: 'measurement_unit',
-        label: 'Unidade',
-        field: 'measurement_unit',
         align: 'center',
         headerStyle: 'width: 100px',
     },

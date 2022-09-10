@@ -20,19 +20,12 @@
             </div>
         </div>
         <div class="row q-py-sm q-col-gutter-sm">
-            <div class="col col-md-6">
+            <div class="col">
                 <base-select
                     label="Tipo"
                     v-model:model-value="formData.type"
                     :options="typeOptions"
                     :error-msg="v$.type.$errors[0]?.$message"
-                />
-            </div>
-            <div class="col col-md-6">
-                <base-select
-                    label="Unidade de medida"
-                    v-model:model-value="formData.measurement_unit"
-                    :options="unitsOptions"
                 />
             </div>
         </div>
@@ -87,7 +80,6 @@ interface ProductFormData {
     type?: QSelectOption<number>|null
     cost?: number|null
     price?: number|null
-    measurement_unit?: QSelectOption<number>|null
 }
 
 const props = defineProps<{
@@ -111,10 +103,6 @@ const formData = reactive<ProductFormData>({
     },
     cost: props.initialFormData?.cost || null,
     price: props.initialFormData?.price || null,
-    measurement_unit: {
-        label: ProductMeasurementUnitLabels[props.initialFormData?.measurement_unit || ProductMeasurementUnit.UN],
-        value: props.initialFormData?.measurement_unit || ProductMeasurementUnit.UN
-    },
 })
 
 const typeOptions = useLabelToOptions(ProductTypesLabels)
@@ -140,7 +128,6 @@ async function handleSubmit() {
         name: formData.name,
         description: formData.description,
         type: formData.type?.value,
-        measurement_unit: formData.measurement_unit?.value,
         cost: formData.cost,
         price: formData.price,
     }

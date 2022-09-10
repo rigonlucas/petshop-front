@@ -22,7 +22,6 @@ interface ProductInput {
     type: number
     cost?: number|null
     price: number
-    measurement_unit: number
 }
 
 export async function get(id: number) {
