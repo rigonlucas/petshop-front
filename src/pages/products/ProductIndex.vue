@@ -86,7 +86,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import ProductService from 'src/features/products/services/ProductService'
-import { ProductModel, ProductTypesLabels, ProductMeasurementUnitLabels } from 'src/features/products/models/ProductModel'
+import { ProductModel, ProductTypesLabels } from 'src/features/products/models/ProductModel'
 import { notifyNegative } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
@@ -150,7 +150,7 @@ const {
     hasNextPage,
     data,
     isLoading,
-} = await usePaginatedResourceListing<ProductModel>(async (cursor?: string) => {
+} = await usePaginatedResourceListing<ProductModel>(async (cursor?: string|null) => {
     return await ProductService.list({
         cursor,
         name: productName.value,

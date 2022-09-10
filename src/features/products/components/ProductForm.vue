@@ -61,7 +61,6 @@ import {
     ProductModel,
     ProductTypes,
     ProductTypesLabels,
-    ProductMeasurementUnit, ProductMeasurementUnitLabels,
 } from 'src/features/products/models/ProductModel'
 import BaseInput from 'components/Input/BaseInput.vue'
 import { QSelectOption } from 'quasar'
@@ -106,7 +105,6 @@ const formData = reactive<ProductFormData>({
 })
 
 const typeOptions = useLabelToOptions(ProductTypesLabels)
-const unitsOptions = useLabelToOptions(ProductMeasurementUnitLabels)
 
 const requiredWithMessage = helpers.withMessage('Campo obrigatório', required)
 const formRules = {
@@ -119,7 +117,6 @@ const v$ = useVuelidate<ProductFormData>(formRules, formData)
 const isLoading = ref<boolean>(false)
 async function handleSubmit() {
     v$.value.$touch()
-    console.log('aaa')
     const valid = await v$.value.$validate()
     if (!valid) {
         return

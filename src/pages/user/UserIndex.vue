@@ -92,7 +92,7 @@ const {
     hasNextPage,
     data,
     isLoading,
-} = await usePaginatedResourceListing<UserModel>(async (cursor?: string) => {
+} = await usePaginatedResourceListing<UserModel>(async (cursor?: string|null) => {
     return await UserService.list({
         cursor,
         name: userName.value,

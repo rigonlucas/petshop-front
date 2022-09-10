@@ -9,23 +9,6 @@ export const ProductTypesLabels = {
     [key: number]: string
 }
 
-export enum ProductMeasurementUnit {
-    UN = 1,
-    KG = 2,
-    L = 3,
-    GM = 4,
-    ML = 5
-}
-export const ProductMeasurementUnitLabels = {
-    [ProductMeasurementUnit.UN]: 'un',
-    [ProductMeasurementUnit.KG]: 'kg',
-    [ProductMeasurementUnit.L]: 'l',
-    [ProductMeasurementUnit.GM]: 'gm',
-    [ProductMeasurementUnit.ML]: 'ml',
-} as {
-    [key: number]: string
-}
-
 export interface ProductModel {
     id: number,
     account_id: number,
