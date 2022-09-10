@@ -31,9 +31,7 @@ export async function get(id: number) {
 }
 
 export async function remove(id: number) {
-    const response = await api.delete(`product/${id}`)
-
-    return response.data.data as ProductModel
+    return await api.delete(`product/${id}`)
 }
 
 export async function create(product: ProductInput) {

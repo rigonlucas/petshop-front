@@ -145,7 +145,7 @@ const {
     hasNextPage,
     data,
     isLoading,
-} = await usePaginatedResourceListing<ClientModel>(async (cursor?: string) => {
+} = await usePaginatedResourceListing<ClientModel>(async (cursor?: string|null) => {
     return await ClientService.list({
         cursor,
         include: ['pets', 'pets.breed'],

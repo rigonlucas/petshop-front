@@ -52,7 +52,12 @@
                         icon="edit"
                         @click="redirectToEdit(row)"
                     />
-                    <DeleteProduct @update:products="fetchData" :name="row.name" :id="row.id"/>
+                    <q-btn
+                        color="red"
+                        size="xs"
+                        icon="delete"
+                        @click="handleDelete(row)"
+                    />
                 </q-td>
             </template>
             <template #pagination>
@@ -83,11 +88,13 @@
 import { ref, watch } from 'vue'
 import ProductService from 'src/features/products/services/ProductService'
 import { ProductModel, ProductTypesLabels } from 'src/features/products/models/ProductModel'
-import { notifyNegative } from 'src/utils/NotifyHelper'
+import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
 import { useRouter } from 'vue-router'
 import DeleteProduct from 'pages/products/components/DeleteProduct.vue'
+import DialogHelper from 'src/utils/DialogHelper'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -165,5 +172,23 @@ function calcProductProfit(cost: number, price: number): number {
 
 function redirectToEdit(row: ProductModel) {
     router.push({ name: 'product.edit', params: { id: row.id } })
+}
+
+async function handleDelete(product: ProductModel) {
+    const confirm = await DialogHelper.confirm(product.name, 'Remover produto?')
+    if (!confirm) {
+        return
+    }
+
+    try {
+        await ProductService.remove(product.id)
+        notifyPositive('Produto excluído')
+        await fetchData()
+    } catch (error: unknown) {
+        if (!axios.isAxiosError(error)) {
+            throw error
+        }
+        notifyNegative(error.response && error.response.data.message)
+    }
 }
 </script>
