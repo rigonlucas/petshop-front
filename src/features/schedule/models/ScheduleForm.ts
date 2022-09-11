@@ -3,22 +3,7 @@ import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 import UserModel from 'src/features/user/models/UserModel'
 import { ProductModel } from 'src/features/products/models/ProductModel'
-
-export enum ScheduleTypes {
-    VETERINARIAN = 1,
-    PET_CUT = 2,
-    PET_SHOWER = 3,
-    PET_CUT_SHOWER = 4
-}
-
-export const ScheduleTypesLabels = {
-    [ScheduleTypes.VETERINARIAN]: 'Veterinario',
-    [ScheduleTypes.PET_CUT]: 'Tosa',
-    [ScheduleTypes.PET_SHOWER]: 'Banho',
-    [ScheduleTypes.PET_CUT_SHOWER]: 'Banho e tosa',
-} as {
-    [key: number]: string
-}
+import { ScheduleTypes } from 'src/features/schedule/models/ScheduleModel'
 
 export interface AddProductsFormData {
     id?: number

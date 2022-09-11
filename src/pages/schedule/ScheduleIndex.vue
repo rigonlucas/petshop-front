@@ -180,6 +180,7 @@ const calendarOptions: CalendarOptions = {
     selectAllow: (e) => !isPast(e.start),
     weekends: true,
     nowIndicator: true,
+    allDaySlot: false,
     firstDay: getDay(new Date()),
     events: fetchSchedules,
     eventClick: (e) => {

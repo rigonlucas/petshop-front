@@ -92,7 +92,6 @@
 import { defineProps, defineEmits } from 'vue'
 import { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
 import useLabelToOptions from 'src/composables/select/useLabelToOptions'
-import { ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleForm'
 import UserModel from 'src/features/user/models/UserModel'
 import BaseSelect from 'components/Select/BaseSelect.vue'
 import useHelpers from 'src/composables/select/useHelpers'
@@ -102,6 +101,7 @@ import { format, parse } from 'date-fns'
 import { QSelectOption } from 'quasar'
 import { ErrorObject } from '@vuelidate/core'
 import BaseInput from 'components/Input/BaseInput.vue'
+import { ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleModel'
 
 interface Props {
     type?: DetailedSelectOption<number>
