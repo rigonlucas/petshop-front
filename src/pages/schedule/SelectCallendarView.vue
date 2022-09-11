@@ -3,8 +3,8 @@
         :label="ViewsName[props.currentView]"
         icon="expand_more"
     >
-        <q-menu fit>
-            <q-list style="min-width: 100px">
+        <q-menu style="min-width: 185px">
+            <q-list>
                 <q-item
                     @click="changeView('listDay')"
                     clickable
@@ -86,9 +86,9 @@ enum ViewsName {
     listDay = 'Dia (Lista)',
     listWeek = 'Semana (Lista)',
     listMonth = 'Mês (Lista)',
-    timeGridDay = 'Dia (Grid)',
-    timeGridWeek = 'Semana (Grid)',
-    dayGridMonth = 'Mês (Grid)',
+    timeGridDay = 'Dia (Calendário)',
+    timeGridWeek = 'Semana (Calendário)',
+    dayGridMonth = 'Mês (Calendário)',
 }
 const props = defineProps({
     currentView: {

@@ -1,6 +1,6 @@
 <template>
     <q-toolbar-title>
-        {{ accountStore.account.name }}
+        {{ user.account.name }}
     </q-toolbar-title>
     <q-space />
 
@@ -16,7 +16,7 @@
             <q-menu>
                 <q-list style="min-width: 100px">
                     <q-item
-                        v-if="accountStore.id === accountStore.account.user_id"
+                        v-if="user.id === user.account.user_id"
                         clickable
                         v-close-popup
                         :to="{ name: 'users.index' }"
@@ -42,8 +42,7 @@ import { useAuthStore } from 'stores/auth-store'
 import AuthService from 'src/features/auth/services/AuthService'
 
 const authStore = useAuthStore()
-const accountStore = authStore.getUser
-authStore.checkSession()
+const user = authStore.getUser
 
 async function handleLogout() {
     await AuthService.logout()

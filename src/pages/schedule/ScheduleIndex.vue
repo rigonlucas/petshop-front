@@ -31,7 +31,7 @@
                     Adicionar
                 </q-btn>
             </div>
-            <div class="col-10 q-pt-sm" style="height: calc(100vh - 160px)">
+            <div class="col-10 q-pt-sm" style="height: calc(100vh - 200px)">
                 <div class="row q-pb-sm" style="align-items: end;">
                     <div class="col-12 col-sm-4 q-gutter-sm">
                         <q-btn
@@ -56,7 +56,7 @@
                             <q-icon name="chevron_right"/>
                         </q-btn>
                     </div>
-                    <div class="col-12 col-sm-4 ">
+                    <div class="col-12 col-sm-4 text-center">
                         <p class="text-h5">{{ currentDateString }}</p>
                     </div>
                     <div class="col-12 flex justify-end col-sm-4">
@@ -103,28 +103,23 @@ import { useSchedulePopup } from 'pages/schedule/composables/useSchedulePopup'
 import SelectCallendarView from 'pages/schedule/SelectCallendarView.vue'
 import { useScheduleStore } from 'stores/schedule'
 import { useCalendar } from 'pages/schedule/composables/UseCalendar'
+import useReactiveRouteParams from 'src/composables/useReactiveRouteParams'
 
 const router = useRouter()
 const scheduleStore = useScheduleStore()
 const calendar = ref<InstanceType<typeof FullCalendar>>()
-
-const prefilledScheduleData = reactive<ScheduleFormData>({
-    start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
-    duration: 30,
+const filters = useReactiveRouteParams({
+    start_at: '',
 })
 
-function handleCreatedSchedule() {
-    showPopup.value = false
-    if (!calendar.value) {
-        return
-    }
-    calendar.value?.getApi().refetchEvents()
-}
-
 async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promise<EventInput[]> {
+    const startFilter = format(start, 'yyyy-MM-dd')
+    const endFilter = format(end, 'yyyy-MM-dd')
+    filters.start_at = startFilter
+
     const response = await ScheduleService.list({
-        start_at_start: format(start, 'yyyy-MM-dd'),
-        start_at_end: format(end, 'yyyy-MM-dd'),
+        start_at_start: startFilter,
+        start_at_end: endFilter,
         include: 'user,pet,client',
     })
 
@@ -155,11 +150,25 @@ const {
     currentDateString
 } = useCalendar(calendar)
 
+const prefilledScheduleData = reactive<ScheduleFormData>({
+    start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
+    duration: 30,
+})
+
+function handleCreatedSchedule() {
+    showPopup.value = false
+    if (!calendar.value) {
+        return
+    }
+    calendar.value?.getApi().refetchEvents()
+}
+
 const calendarOptions: CalendarOptions = {
     locale: localePtBr,
     initialView: scheduleStore.selectedView,
     height: '100%',
     headerToolbar: false,
+    initialDate: filters.start_at || undefined,
     plugins: [
         listPlugin,
         timeGridPlugin,
@@ -170,6 +179,7 @@ const calendarOptions: CalendarOptions = {
     selectMirror: true,
     selectAllow: (e) => !isPast(e.start),
     weekends: true,
+    nowIndicator: true,
     firstDay: getDay(new Date()),
     events: fetchSchedules,
     eventClick: (e) => {

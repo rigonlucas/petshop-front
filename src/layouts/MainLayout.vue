@@ -10,7 +10,7 @@
                     aria-label="Menu"
                     @click="toggleLeftDrawer"
                 />
-                <top-menu/>
+                <user-avatar-menu />
             </q-toolbar>
         </q-header>
         <q-ajax-bar
@@ -39,7 +39,7 @@
             </q-img>
         </q-drawer>
 
-        <q-page-container :key="route.path">
+        <q-page-container>
             <q-page class="q-pa-md">
                 <q-breadcrumbs class="q-mb-md">
                     <q-breadcrumbs-el label="Início" icon="home" :to="{ name: 'home' }"/>
@@ -76,9 +76,8 @@ import {
     RouteLocationRaw
 } from 'vue-router'
 import { useAuthStore } from 'stores/auth-store'
-import AuthService from 'src/features/auth/services/AuthService'
 import LeftMenu from 'layouts/menus/LeftMenu.vue'
-import TopMenu from 'layouts/menus/TopMenu.vue'
+import UserAvatarMenu from 'layouts/menus/UserAvatarMenu.vue'
 
 const leftDrawerOpen = ref(false)
 function toggleLeftDrawer() {
@@ -91,7 +90,7 @@ type BreadcrumbRouteEl = {
     to?: RouteLocationRaw,
 
 }
-const route = useRoute()
+
 const routeBreadcrumbs = computed<BreadcrumbRouteEl[]>(() => {
     return useRoute().matched
         .filter((matchedRoute: RouteRecordNormalized): boolean => !!matchedRoute.meta.title)
@@ -106,11 +105,4 @@ const routeBreadcrumbs = computed<BreadcrumbRouteEl[]>(() => {
 
 const authStore = useAuthStore()
 authStore.checkSession()
-
-const accountStore = authStore.getUser
-
-async function handleLogout() {
-    await AuthService.logout()
-    authStore.clearUserSession()
-}
 </script>
