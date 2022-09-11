@@ -175,7 +175,7 @@ function redirectToEdit(row: ProductModel) {
 }
 
 async function handleDelete(product: ProductModel) {
-    const confirm = await DialogHelper.confirm(product.name, 'Remover produto?')
+    const confirm = await DialogHelper.confirm(product.name, 'Remover produto?', 'red', 'Confirmar')
     if (!confirm) {
         return
     }
