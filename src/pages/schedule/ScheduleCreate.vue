@@ -13,7 +13,6 @@
                     <div class="col">
                         <schedule-form
                             class="q-py-none"
-                            show-save-button
                             @submiting="isSubmiting = true"
                             @success="handleSuccess"
                             @error="isSubmiting = false"

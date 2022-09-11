@@ -63,7 +63,6 @@
             </div>
             <div class="row">
                 <q-btn
-                    v-if="showSaveButton"
                     color="primary"
                     type="submit"
                     form="schedule-form"
@@ -95,10 +94,6 @@ import { ApiErrors } from 'src/models/ApiModels'
 import AddProductsForm from 'src/features/schedule/components/AddProductsForm.vue'
 
 const props = defineProps({
-    showSaveButton: {
-        type: Boolean,
-        default: false
-    },
     id: {
         type: Number,
     },

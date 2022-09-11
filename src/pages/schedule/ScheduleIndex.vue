@@ -100,7 +100,7 @@ import { reactive, ref } from 'vue'
 
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
 import { useSchedulePopup } from 'pages/schedule/composables/useSchedulePopup'
-import SelectCallendarView from 'pages/schedule/SelectCallendarView.vue'
+import SelectCallendarView from 'pages/schedule/components/SelectCallendarView.vue'
 import { useScheduleStore } from 'stores/schedule'
 import { useCalendar } from 'pages/schedule/composables/UseCalendar'
 import useReactiveRouteParams from 'src/composables/useReactiveRouteParams'

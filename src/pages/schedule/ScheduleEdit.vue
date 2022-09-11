@@ -15,7 +15,6 @@
                             class="q-py-none"
                             :id="schedule.id"
                             :initial-form-data="formInitialData"
-                            show-save-button
                             @success="handleSuccess"
                         />
                     </div>
