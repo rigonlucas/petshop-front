@@ -9,6 +9,7 @@
                     @click="changeView('listDay')"
                     clickable
                     v-close-popup
+                    :active="currentView === 'listDay'"
                 >
                     <q-item-section>
                         <div>
@@ -20,6 +21,7 @@
                     @click="changeView('listWeek')"
                     clickable
                     v-close-popup
+                    :active="currentView === 'listWeek'"
                 >
                     <q-item-section>
                         <div>
@@ -31,6 +33,7 @@
                     @click="changeView('listMonth')"
                     clickable
                     v-close-popup
+                    :active="currentView === 'listMonth'"
                 >
                     <q-item-section>
                         <div>
@@ -45,6 +48,7 @@
                     @click="changeView('timeGridDay')"
                     clickable
                     v-close-popup
+                    :active="currentView === 'timeGridDay'"
                 >
                     <q-item-section>
                         <div>
@@ -56,6 +60,7 @@
                     @click="changeView('timeGridWeek')"
                     clickable
                     v-close-popup
+                    :active="currentView === 'timeGridWeek'"
                 >
                     <q-item-section>
                         <div>
@@ -67,6 +72,7 @@
                     @click="changeView('dayGridMonth')"
                     clickable
                     v-close-popup
+                    :active="currentView === 'dayGridMonth'"
                 >
                     <q-item-section>
                         <div>
