@@ -37,6 +37,46 @@
                     Produtos
                 </q-item-section>
             </q-item>
+            <q-expansion-item
+                expand-separator
+                icon="trending_up"
+                label="Relatórios"
+            >
+                <q-list>
+                    <q-item clickable v-ripple :to="{ name: 'product.index' }">
+                        <q-item-section avatar>
+                            <q-icon size="xs" right name="schedule"/>
+                        </q-item-section>
+                        <q-item-section>
+                            Agendamentos
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple :to="{ name: 'product.index' }">
+                        <q-item-section avatar>
+                            <q-icon size="xs" right name="person"/>
+                        </q-item-section>
+                        <q-item-section>
+                            Clientes
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple :to="{ name: 'product.index' }">
+                        <q-item-section avatar>
+                            <q-icon size="xs" right name="pets"/>
+                        </q-item-section>
+                        <q-item-section>
+                            Pets
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple :to="{ name: 'product.index' }">
+                        <q-item-section avatar>
+                            <q-icon size="xs" right name="paid"/>
+                        </q-item-section>
+                        <q-item-section>
+                            Vendas
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-expansion-item>
         </q-list>
     </div>
 </template>
