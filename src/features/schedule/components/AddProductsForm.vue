@@ -217,7 +217,7 @@ async function handleAddProduct() {
         product: formData.product.details,
         quantity: formData.quantity,
         price: formData.price,
-        discount: formData.discount,
+        discount: formData.discount || 0,
     }
 
     if (props.scheduleId) {

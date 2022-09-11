@@ -20,5 +20,5 @@ export interface ScheduleModel {
     pet: PetModel
     client: ClientModel
     user: UserModel
-    products: ScheduleHasProductModel[]
+    hasProducts: ScheduleHasProductModel[]
 }
