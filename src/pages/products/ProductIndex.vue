@@ -92,7 +92,6 @@ import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import usePaginatedResourceListing from 'src/composables/fetch/usePaginatedResourceListing'
 import { formatCurrency } from 'src/utils/CurrencyHelper'
 import { useRouter } from 'vue-router'
-import DeleteProduct from 'pages/products/components/DeleteProduct.vue'
 import DialogHelper from 'src/utils/DialogHelper'
 import axios from 'axios'
 
