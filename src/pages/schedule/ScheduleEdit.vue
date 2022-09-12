@@ -37,8 +37,9 @@ import { toDetailedSelectOption } from 'src/utils/ModelToSelectOption'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 import UserModel from 'src/features/user/models/UserModel'
-import { ScheduleFormData, ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleForm'
+import { ScheduleFormData } from 'src/features/schedule/models/ScheduleForm'
 import { format, parseISO } from 'date-fns'
+import { ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleModel'
 const props = defineProps({
     id: {
         type: [Number, String],
