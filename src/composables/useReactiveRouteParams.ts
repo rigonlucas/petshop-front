@@ -8,7 +8,7 @@ export default function useReactiveRouteParams<T extends Record<string, any>>(pa
 
     watch(reactiveParams, (newObject: Record<string, any>) => {
         nextTick(() => {
-            router.replace({ query: { ...route.query, ...newObject } })
+            router.push({ query: { ...route.query, ...newObject } })
         })
     })
 

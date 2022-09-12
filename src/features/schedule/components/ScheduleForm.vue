@@ -81,7 +81,7 @@ import { reactive, ref } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
 import { ScheduleFormData, AddProductsFormData } from 'src/features/schedule/models/ScheduleForm'
 import ScheduleServiceForm from 'src/features/schedule/components/ScheduleServiceForm.vue'
-import { format, parse } from 'date-fns'
+import { format, parse, parseISO } from 'date-fns'
 import InfoBanner from 'src/features/schedule/components/InfoBanner.vue'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
 import { required, helpers } from '@vuelidate/validators'
@@ -92,15 +92,17 @@ import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
 import axios from 'axios'
 import { ApiErrors } from 'src/models/ApiModels'
 import AddProductsForm from 'src/features/schedule/components/AddProductsForm.vue'
+import { ScheduleModel, ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleModel'
+import { toDetailedSelectOption } from 'src/utils/ModelToSelectOption'
+import { ClientModel } from 'src/features/client/models/ClientModel'
+import { PetModel } from 'src/features/pet/models/PetModel'
+import UserModel from 'src/features/user/models/UserModel'
 
-const props = defineProps({
-    id: {
-        type: Number,
-    },
-    initialFormData: {
-        type: Object,
-    }
-})
+interface Props {
+    id: number
+    schedule?: ScheduleModel
+}
+const props = defineProps<Props>()
 
 interface Emits {
     (event: 'submiting'): void
@@ -110,15 +112,18 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 const formData: ScheduleFormData = reactive({
-    client: null,
-    pet: null,
-    type: null,
-    duration: 30,
-    start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
-    user: null,
-    description: null,
-    products: [],
-    ...props.initialFormData,
+    client: toDetailedSelectOption<ClientModel>(props.schedule?.client),
+    pet: toDetailedSelectOption<PetModel>(props.schedule?.pet),
+    type: !props.schedule ? null : {
+        label: ScheduleTypesLabels[props.schedule.type],
+        value: props.schedule.type,
+        details: props.schedule.type
+    },
+    duration: props.schedule?.duration || 30,
+    start_at: (props.schedule && format(parseISO(props.schedule.start_at), 'dd/MM/yyyy HH:mm')) || format(new Date(), 'dd/MM/yyyy HH:mm'),
+    user: toDetailedSelectOption<UserModel>(props.schedule?.user),
+    description: props.schedule?.description || null,
+    products: props.schedule?.hasProducts || []
 })
 const isSubmiting = ref(false)
 const requiredWithMessage = helpers.withMessage('Campo obrigatório', required)

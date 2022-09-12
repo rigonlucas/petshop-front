@@ -2,12 +2,19 @@ import FullCalendar from '@fullcalendar/vue3'
 import { onMounted, ref, Ref } from 'vue'
 import { useScheduleStore } from 'stores/schedule'
 
-export function useCalendar(calendar: Ref<InstanceType<typeof FullCalendar> | undefined>) {
+export function useCalendar(
+    calendar: Ref<InstanceType<typeof FullCalendar> | undefined>,
+    onUserAction?: () => void,
+) {
     const currentDateString = ref('')
     function updateCurrentDateString() {
         if (!calendar.value) return
 
         currentDateString.value = calendar.value?.getApi().getCurrentData().viewTitle
+    }
+    function triggerOnChengeEvents() {
+        onUserAction && onUserAction()
+        updateCurrentDateString()
     }
     onMounted(() => {
         updateCurrentDateString()
@@ -17,21 +24,21 @@ export function useCalendar(calendar: Ref<InstanceType<typeof FullCalendar> | un
         if (!calendar.value) return
 
         calendar.value.getApi().prev()
-        updateCurrentDateString()
+        triggerOnChengeEvents()
     }
 
     function goNext() {
         if (!calendar.value) return
 
         calendar.value.getApi().next()
-        updateCurrentDateString()
+        triggerOnChengeEvents()
     }
 
     function goToday() {
         if (!calendar.value) return
 
         calendar.value.getApi().today()
-        updateCurrentDateString()
+        triggerOnChengeEvents()
     }
 
     function changeView(viewName: string) {
@@ -39,7 +46,7 @@ export function useCalendar(calendar: Ref<InstanceType<typeof FullCalendar> | un
 
         calendar.value.getApi().changeView(viewName)
         useScheduleStore().setSelectedView(viewName)
-        updateCurrentDateString()
+        triggerOnChengeEvents()
     }
 
     return {

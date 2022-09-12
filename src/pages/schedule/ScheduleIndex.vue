@@ -93,7 +93,7 @@ import { CalendarOptions } from '@fullcalendar/core'
 import listPlugin from '@fullcalendar/list'
 import localePtBr from '@fullcalendar/core/locales/pt-br'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
-import { differenceInMinutes, format, getDay, isPast, parseISO } from 'date-fns'
+import { addDays, differenceInMinutes, format, getDay, isPast, parseISO } from 'date-fns'
 import { ScheduleFormData } from 'src/features/schedule/models/ScheduleForm'
 import { useRouter } from 'vue-router'
 import { reactive, ref } from 'vue'
@@ -112,10 +112,16 @@ const filters = useReactiveRouteParams({
     start_at: '',
 })
 
+function updateFilter() {
+    if (!calendar.value) return
+
+    const startData = calendar.value?.getApi().getDate()
+    filters.start_at = format(startData, 'yyyy-MM-dd')
+}
+
 async function fetchSchedules({ start, end }: { start: Date, end: Date }): Promise<EventInput[]> {
     const startFilter = format(start, 'yyyy-MM-dd')
     const endFilter = format(end, 'yyyy-MM-dd')
-    filters.start_at = startFilter
 
     const response = await ScheduleService.list({
         start_at_start: startFilter,
@@ -147,8 +153,8 @@ const {
     goNext,
     goToday,
     changeView,
-    currentDateString
-} = useCalendar(calendar)
+    currentDateString,
+} = useCalendar(calendar, updateFilter)
 
 const prefilledScheduleData = reactive<ScheduleFormData>({
     start_at: format(new Date(), 'dd/MM/yyyy HH:mm'),
@@ -188,7 +194,7 @@ const calendarOptions: CalendarOptions = {
         if (!eventId) {
             return
         }
-        router.push({ name: 'schedule.edit', params: { id: eventId } })
+        router.push({ name: 'schedule.edit', params: { id: eventId }, query: { } })
     },
     select: (e) => {
         if (isPast(e.start)) {

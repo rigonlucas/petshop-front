@@ -14,7 +14,7 @@
                         <schedule-form
                             class="q-py-none"
                             :id="schedule.id"
-                            :initial-form-data="formInitialData"
+                            :schedule="schedule"
                             @success="handleSuccess"
                         />
                     </div>
@@ -33,13 +33,7 @@ import { useRouter } from 'vue-router'
 import ScheduleForm from 'src/features/schedule/components/ScheduleForm.vue'
 import { defineProps } from 'vue'
 import ScheduleService from 'src/features/schedule/services/ScheduleService'
-import { toDetailedSelectOption } from 'src/utils/ModelToSelectOption'
-import { ClientModel } from 'src/features/client/models/ClientModel'
-import { PetModel } from 'src/features/pet/models/PetModel'
-import UserModel from 'src/features/user/models/UserModel'
-import { ScheduleFormData } from 'src/features/schedule/models/ScheduleForm'
-import { format, parseISO } from 'date-fns'
-import { ScheduleTypesLabels } from 'src/features/schedule/models/ScheduleModel'
+
 const props = defineProps({
     id: {
         type: [Number, String],
@@ -48,21 +42,6 @@ const props = defineProps({
 })
 
 const schedule = await ScheduleService.get(Number(props.id), { include: 'user,pet,client,hasProducts.product' })
-console.log(schedule)
-const formInitialData: ScheduleFormData = {
-    client: toDetailedSelectOption<ClientModel>({ model: schedule.client }),
-    pet: toDetailedSelectOption<PetModel>({ model: schedule.pet }),
-    user: toDetailedSelectOption<UserModel>({ model: schedule.user }),
-    duration: schedule.duration,
-    start_at: format(parseISO(schedule.start_at), 'dd/MM/yyyy HH:mm'),
-    description: schedule.description,
-    type: {
-        label: ScheduleTypesLabels[schedule.type],
-        value: schedule.type,
-        details: schedule.type
-    },
-    products: schedule.hasProducts,
-}
 const router = useRouter()
 
 function handleHide() {
