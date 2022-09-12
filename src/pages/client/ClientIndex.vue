@@ -123,6 +123,7 @@ const columns = [
         label: 'Email',
         field: 'email',
         align: 'left',
+        headerStyle: 'width: 250px',
         sortable: false,
     },
     {
@@ -130,6 +131,7 @@ const columns = [
         label: 'Contato',
         field: 'phone',
         align: 'left',
+        headerStyle: 'width: 150px',
         sortable: false,
     },
     {
@@ -137,7 +139,6 @@ const columns = [
         align: 'left',
         label: 'Pets',
         field: 'pets',
-        // format: (val: PetModel[]) => val.map(pet => pet.name).join(', '),
         sortable: false,
     },
     {
@@ -146,7 +147,7 @@ const columns = [
         label: 'Opções',
         field: 'options',
         sortable: false,
-        headerStyle: 'width: 230px',
+        headerStyle: 'width: 150px',
     },
 ]
 

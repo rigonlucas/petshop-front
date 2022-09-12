@@ -3,10 +3,6 @@ import { RouteLocation, RouteRecordRaw } from 'vue-router'
 export default [
     {
         path: '/clientes',
-        meta: {
-            title: 'Clientes',
-            icon: 'group',
-        },
         children: [
             {
                 name: 'client.index',

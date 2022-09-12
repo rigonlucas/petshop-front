@@ -16,7 +16,7 @@
             <q-menu>
                 <q-list style="min-width: 100px">
                     <q-item
-                        v-if="user.id === user.account.user_id"
+                        v-if="user.roles.length"
                         clickable
                         v-close-popup
                         :to="{ name: 'users.index' }"
