@@ -12,89 +12,87 @@
                 </q-btn>
             </div>
         </div>
-        <div class="q-pa-lg">
-            <q-table
-                title="Clientes"
-                row-key="name"
-                :rows="data"
-                :columns="columns"
-                :loading="isLoading"
-                :rows-per-page-options="[0]"
-            >
-                <template v-slot:loading>
-                    <q-inner-loading showing color="primary"/>
-                </template>
-                <template v-slot:top-right>
-                    <q-input
-                        v-model="clientName"
-                        placeholder="Nome do cliente"
-                        :debounce="300"
-                    >
-                        <template v-slot:append>
-                            <q-icon name="search" />
-                        </template>
-                    </q-input>
-                </template>
-                <template #body-cell-pets="{ row }: { row: ClientModel }">
-                    <q-td v-if=row.pets.length>
-                        <template v-for="(pet, key) in row.pets" :key="key">
-                            <q-chip color="blue" text-color="white" size="sm">
-                                <q-avatar icon="pets"/>
-                                {{ pet.name }}, {{ pet.breed.name }}
-                            </q-chip>
-                        </template>
-                    </q-td>
-                    <q-td class="text-left" v-else>
-                        <q-item-label caption>
-                            <q-badge color="yellow-6" text-color="black" rounded>
-                                <q-icon
-                                    name="warning"
-                                />
-                                Sem pets registrados
-                            </q-badge>
-                        </q-item-label>
-                    </q-td>
-                </template>
-                <template #body-cell-options="{ row }: { row: ClientModel }">
-                    <q-td :id="row.id">
-                        <div class="flex">
-                            <q-btn
-                                color="warning"
-                                size="xs"
-                                icon="edit"
-                                @click="redirectToEdit(row)"
+        <q-table
+            title="Clientes"
+            row-key="name"
+            :rows="data"
+            :columns="columns"
+            :loading="isLoading"
+            :rows-per-page-options="[0]"
+        >
+            <template v-slot:loading>
+                <q-inner-loading showing color="primary"/>
+            </template>
+            <template v-slot:top-right>
+                <q-input
+                    v-model="clientName"
+                    placeholder="Nome do cliente"
+                    :debounce="300"
+                >
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
+            </template>
+            <template #body-cell-pets="{ row }: { row: ClientModel }">
+                <q-td v-if=row.pets.length>
+                    <template v-for="(pet, key) in row.pets" :key="key">
+                        <q-chip color="blue" text-color="white" size="sm">
+                            <q-avatar icon="pets"/>
+                            {{ pet.name }}, {{ pet.breed.name }}
+                        </q-chip>
+                    </template>
+                </q-td>
+                <q-td class="text-left" v-else>
+                    <q-item-label caption>
+                        <q-badge color="yellow-6" text-color="black" rounded>
+                            <q-icon
+                                name="warning"
                             />
-                            <q-btn
-                                color="red"
-                                size="xs"
-                                icon="delete"
-                                @click="handleDelete(row)"
-                            />
-                        </div>
-                    </q-td>
-                </template>
-                <template #pagination>
-                    <q-btn
-                        icon="chevron_left"
-                        color="grey-8"
-                        round
-                        dense
-                        flat
-                        :disable="!hasPreviousPage"
-                        @click="fetchPreviousPage"
-                    />
-                    <q-btn
-                        icon="chevron_right"
-                        color="grey-8"
-                        round
-                        dense
-                        flat
-                        :disable="!hasNextPage"
-                        @click="fetchNextPage"
-                    />
-                </template>
-            </q-table>
-        </div>
+                            Sem pets registrados
+                        </q-badge>
+                    </q-item-label>
+                </q-td>
+            </template>
+            <template #body-cell-options="{ row }: { row: ClientModel }">
+                <q-td :id="row.id">
+                    <div class="flex">
+                        <q-btn
+                            color="warning"
+                            size="xs"
+                            icon="edit"
+                            @click="redirectToEdit(row)"
+                        />
+                        <q-btn
+                            color="red"
+                            size="xs"
+                            icon="delete"
+                            @click="handleDelete(row)"
+                        />
+                    </div>
+                </q-td>
+            </template>
+            <template #pagination>
+                <q-btn
+                    icon="chevron_left"
+                    color="grey-8"
+                    round
+                    dense
+                    flat
+                    :disable="!hasPreviousPage"
+                    @click="fetchPreviousPage"
+                />
+                <q-btn
+                    icon="chevron_right"
+                    color="grey-8"
+                    round
+                    dense
+                    flat
+                    :disable="!hasNextPage"
+                    @click="fetchNextPage"
+                />
+            </template>
+        </q-table>
     </div>
 </template>
 
