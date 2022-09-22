@@ -23,23 +23,23 @@ export async function list(params: any): Promise<PaginatedServerResponse<ClientM
 }
 
 export async function get(id: number) {
-    const response = await api.get(`client/${id}`)
+    const response = await api.get(`clients/${id}`)
 
     return response.data.data as ClientModel
 }
 
 export async function remove(id: number) {
-    return await api.delete(`client/${id}`)
+    return await api.delete(`clients/${id}`)
 }
 
 export async function create(client: ClientInput) {
-    const response = await api.post('client', client)
+    const response = await api.post('clients', client)
 
     return response.data.data as ClientModel
 }
 
 export async function update(id: number, client: ClientInput) {
-    const response = await api.put(`client/${id}`, client)
+    const response = await api.put(`clients/${id}`, client)
 
     return response.data.data as ClientModel
 }

@@ -39,13 +39,13 @@ interface ScheduleInput {
     status?: string
 }
 export async function create(data: ScheduleInput) {
-    const response = await api.post('schedule', { ...data, status: 1 })
+    const response = await api.post('schedules', { ...data, status: 1 })
 
     return response.data
 }
 
 export async function edit(id: number, data: ScheduleInput) {
-    const response = await api.put(`schedule/${id}`, { ...data, status: 1 })
+    const response = await api.put(`schedules/${id}`, { ...data, status: 1 })
 
     return response.data
 }
@@ -53,7 +53,7 @@ export async function edit(id: number, data: ScheduleInput) {
 export async function get(id: number, params?: {
     include?: string
 }) {
-    const response = await api.get(`schedule/${id}`, { params })
+    const response = await api.get(`schedules/${id}`, { params })
 
     return response.data.data as ScheduleModel
 }
@@ -66,13 +66,13 @@ interface addProductInput {
 }
 
 export async function addProduct(scheduleId: number, data: addProductInput) {
-    const response = await api.post(`schedule/${scheduleId}/products`, data)
+    const response = await api.post(`schedules/${scheduleId}/products`, data)
 
     return response.data.data as ScheduleHasProductModel
 }
 
 export async function removeProduct(scheduleId: number, productPivotId: number) {
-    const response = await api.delete(`schedule/${scheduleId}/products/${productPivotId}`)
+    const response = await api.delete(`schedules/${scheduleId}/products/${productPivotId}`)
 
     return response.data
 }
