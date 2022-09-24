@@ -25,23 +25,23 @@ interface ProductInput {
 }
 
 export async function get(id: number) {
-    const response = await api.get(`product/${id}`)
+    const response = await api.get(`products/${id}`)
 
     return response.data.data as ProductModel
 }
 
 export async function remove(id: number) {
-    return await api.delete(`product/${id}`)
+    return await api.delete(`products/${id}`)
 }
 
 export async function create(product: ProductInput) {
-    const response = await api.post('product', product)
+    const response = await api.post('products', product)
 
     return response.data.data as ProductModel
 }
 
 export async function update(id: number, product: ProductInput) {
-    const response = await api.put(`product/${id}`, product)
+    const response = await api.put(`products/${id}`, product)
 
     return response.data.data as ProductModel
 }
