@@ -41,7 +41,7 @@ const props = defineProps({
     }
 })
 
-const schedule = await ScheduleService.get(Number(props.id), { include: 'user,pet,client,hasProducts.product' })
+const schedule = await ScheduleService.get(Number(props.id), { include: 'user,pet,client,hasProducts.product,hasVaccines.vaccine' })
 const router = useRouter()
 
 function handleHide() {

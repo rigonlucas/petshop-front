@@ -2,6 +2,7 @@ import { PetModel } from 'src/features/pet/models/PetModel'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import UserModel from 'src/features/user/models/UserModel'
 import { ScheduleHasProductModel } from 'src/features/schedule/models/ScheduleHasProductModel'
+import { ScheduleHasVaccineModel } from 'src/features/schedule/models/ScheduleHasVaccinesModel'
 
 export enum ScheduleTypes {
     VETERINARIAN = 1,
@@ -68,4 +69,5 @@ export interface ScheduleModel {
     client: ClientModel
     user: UserModel
     hasProducts: ScheduleHasProductModel[]
+    hasVaccines: ScheduleHasVaccineModel[]
 }

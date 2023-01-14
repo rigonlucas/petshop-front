@@ -1,10 +1,16 @@
 <template>
-    <transition enter-active-class="animated fadeIn">
+    <transition-group enter-active-class="animated fadeIn">
         <add-products-form
             v-if="showProducts"
             v-model:products="formData.products"
             @add-product="handleAddProduct"
             @go-back="closeProducts"
+            :schedule-id="props.id"
+        />
+        <add-vaccine-form
+            v-else-if="showVaccines"
+            v-model:vaccines="formData.vaccines"
+            @go-back="closeVaccines"
             :schedule-id="props.id"
         />
         <form
@@ -32,6 +38,7 @@
             <div class="row q-mt-sm">
                 <div class="col">
                     <q-btn
+                        class="q-mr-md"
                         color="primary"
                         @click="openProducts"
                     >
@@ -48,6 +55,26 @@
                             color="red-10"
                         >
                             {{ formData.products.length }}
+                        </q-badge>
+                    </q-btn>
+                    <q-btn
+                        class="q-mr-md"
+                        color="primary"
+                        @click="openVaccines"
+                    >
+                        <q-icon
+                            name="vaccines"
+                            size="2em"
+                            left
+                        />
+                        Vacinas
+                        <q-badge
+                            v-if="formData.vaccines.length > 0"
+                            rounded
+                            floating
+                            color="red-10"
+                        >
+                            {{ formData.vaccines.length }}
                         </q-badge>
                     </q-btn>
                 </div>
@@ -73,13 +100,13 @@
                 </q-btn>
             </div>
         </form>
-    </transition>
+    </transition-group>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import ScheduleClientForm from 'src/features/schedule/components/ScheduleClientForm.vue'
-import { ScheduleFormData, AddProductsFormData } from 'src/features/schedule/models/ScheduleForm'
+import { ScheduleFormData, AddProductsFormData, AddVaccinesFormData } from 'src/features/schedule/models/ScheduleForm'
 import ScheduleServiceForm from 'src/features/schedule/components/ScheduleServiceForm.vue'
 import { format, parse, parseISO } from 'date-fns'
 import InfoBanner from 'src/features/schedule/components/InfoBanner.vue'
@@ -97,6 +124,7 @@ import { toDetailedSelectOption } from 'src/utils/ModelToSelectOption'
 import { ClientModel } from 'src/features/client/models/ClientModel'
 import { PetModel } from 'src/features/pet/models/PetModel'
 import UserModel from 'src/features/user/models/UserModel'
+import AddVaccineForm from 'src/features/schedule/components/AddVaccineForm.vue'
 
 interface Props {
     id: number
@@ -123,7 +151,8 @@ const formData: ScheduleFormData = reactive({
     start_at: (props.schedule && format(parseISO(props.schedule.start_at), 'dd/MM/yyyy HH:mm')) || format(new Date(), 'dd/MM/yyyy HH:mm'),
     user: toDetailedSelectOption<UserModel>(props.schedule?.user),
     description: props.schedule?.description || null,
-    products: props.schedule?.hasProducts || []
+    products: props.schedule?.hasProducts || [],
+    vaccines: props.schedule?.hasVaccines || []
 })
 const isSubmiting = ref(false)
 const requiredWithMessage = helpers.withMessage('Campo obrigatório', required)
@@ -192,6 +221,19 @@ function closeProducts() {
 
 function handleAddProduct(product: AddProductsFormData) {
     formData.products?.push(product)
+}
+
+// Vaccines
+const showVaccines = ref<boolean>(false)
+function openVaccines() {
+    showVaccines.value = true
+}
+function closeVaccines() {
+    showVaccines.value = false
+}
+
+function handleAddVaccine(vaccine: AddVaccinesFormData) {
+    formData.vaccines?.push(vaccine)
 }
 </script>
 
