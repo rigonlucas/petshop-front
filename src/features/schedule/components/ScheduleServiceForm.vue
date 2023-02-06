@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 import { DetailedSelectOption } from 'src/composables/select/useSelectAjaxOptions'
-import useLabelToOptions from 'src/composables/select/useLabelToOptions'
+import useConvertLabelMapToOptions from 'src/composables/select/useConvertLabelMapToOptions'
 import UserModel from 'src/features/user/models/UserModel'
 import BaseSelect from 'components/Select/BaseSelect.vue'
 import useHelpers from 'src/composables/select/useHelpers'
@@ -124,7 +124,7 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 const { primitivesToQSelectOptions } = useHelpers<number>()
-const typesOptions = useLabelToOptions(ScheduleTypesLabels)
+const typesOptions = useConvertLabelMapToOptions(ScheduleTypesLabels)
 function handleDurationInput(value: string) {
     const valueAsNumber = Number(value)
     if (isNaN(valueAsNumber) || value === '' || value === null) {

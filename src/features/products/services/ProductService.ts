@@ -1,6 +1,7 @@
 import { api } from 'boot/axios'
 import { PaginatedServerResponse } from 'src/models/ApiModels'
 import { ProductModel } from 'src/features/products/models/ProductModel'
+import { ProductFormData } from 'src/features/products/models/ProductFormData'
 
 export async function list(params: any): Promise<PaginatedServerResponse<ProductModel>> {
     const includeAsString = params.include?.join(',')
@@ -16,14 +17,6 @@ export async function list(params: any): Promise<PaginatedServerResponse<Product
     return response.data
 }
 
-interface ProductInput {
-    name: string
-    description?: string|null
-    type: number
-    cost?: number|null
-    price: number
-}
-
 export async function get(id: number) {
     const response = await api.get(`products/${id}`)
 
@@ -34,13 +27,13 @@ export async function remove(id: number) {
     return await api.delete(`products/${id}`)
 }
 
-export async function create(product: ProductInput) {
+export async function create(product: ProductFormData) {
     const response = await api.post('products', product)
 
     return response.data.data as ProductModel
 }
 
-export async function update(id: number, product: ProductInput) {
+export async function update(id: number, product: ProductFormData) {
     const response = await api.put(`products/${id}`, product)
 
     return response.data.data as ProductModel

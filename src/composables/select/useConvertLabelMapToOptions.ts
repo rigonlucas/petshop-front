@@ -1,10 +1,10 @@
 import { QSelectOption } from 'quasar'
 
 interface OptionsMap {
-    [key: number]: string,
+    [key: string]: string,
 }
 
-export default function useLabelToOptions(optionsMap: OptionsMap): QSelectOption[] {
+export default function useConvertLabelMapToOptions(optionsMap: OptionsMap): QSelectOption[] {
     const options: QSelectOption[] = []
 
     for (const optionsMapKey in optionsMap) {

@@ -23,7 +23,8 @@
             <div class="col">
                 <base-select
                     label="Tipo"
-                    v-model:model-value="formData.type"
+                    :model-value="String(formData.type)"
+                    @input="handleTypeChange"
                     :options="typeOptions"
                     :error-msg="v$.type.$errors[0]?.$message"
                 />
@@ -58,32 +59,22 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import {
-    ProductModel,
-    ProductTypes,
+    ProductModel, ProductTypes,
     ProductTypesLabels,
 } from 'src/features/products/models/ProductModel'
 import BaseInput from 'components/Input/BaseInput.vue'
-import { QSelectOption } from 'quasar'
 import BaseSelect from 'components/Select/BaseSelect.vue'
-import useLabelToOptions from 'src/composables/select/useLabelToOptions'
+import useConvertLabelMapToOptions from 'src/composables/select/useConvertLabelMapToOptions'
 import InputMoney from 'components/Input/InputMoney.vue'
-import useVuelidate from '@vuelidate/core'
-import { helpers, required } from '@vuelidate/validators'
 import ProductService from 'src/features/products/services/ProductService'
 import axios from 'axios'
 import { notifyNegative, notifyPositive } from 'src/utils/NotifyHelper'
-
-interface ProductFormData {
-    name?: string|null
-    description?: string|null
-    type?: QSelectOption<number>|null
-    cost?: number|null
-    price?: number|null
-}
+import { ProductFormData } from 'src/features/products/models/ProductFormData'
+import { useValidations } from 'src/features/products/composables/productForm'
 
 const props = defineProps<{
     id?: number,
-    initialFormData?: ProductModel
+    initialFormData?: ProductFormData,
 }>()
 
 interface Emits {
@@ -93,26 +84,15 @@ interface Emits {
 }
 const emit = defineEmits<Emits>()
 
-const formData = reactive<ProductFormData>({
-    name: props.initialFormData?.name || '',
-    description: props.initialFormData?.description || '',
-    type: {
-        label: ProductTypesLabels[props.initialFormData?.type || ProductTypes.PRODUCT],
-        value: props.initialFormData?.type || ProductTypes.PRODUCT
-    },
-    cost: props.initialFormData?.cost || null,
-    price: props.initialFormData?.price || null,
-})
+const formData = reactive<ProductFormData>(props.initialFormData || {})
 
-const typeOptions = useLabelToOptions(ProductTypesLabels)
+const typeOptions = useConvertLabelMapToOptions(ProductTypesLabels)
 
-const requiredWithMessage = helpers.withMessage('Campo obrigatório', required)
-const formRules = {
-    name: { requiredWithMessage },
-    type: { requiredWithMessage },
-    price: { requiredWithMessage },
+const v$ = useValidations(formData)
+
+function handleTypeChange(value: string) {
+    formData.type = parseInt(value)
 }
-const v$ = useVuelidate<ProductFormData>(formRules, formData)
 
 const isLoading = ref<boolean>(false)
 async function handleSubmit() {
@@ -121,21 +101,15 @@ async function handleSubmit() {
     if (!valid) {
         return
     }
-    const submitData = {
-        name: formData.name,
-        description: formData.description,
-        type: formData.type?.value,
-        cost: formData.cost,
-        price: formData.price,
-    }
+
     try {
         isLoading.value = true
         let product = null
         if (props.id) {
-            product = await ProductService.update(props.id, submitData)
+            product = await ProductService.update(props.id, formData)
             notifyPositive('Produto atualizado com sucesso')
         } else {
-            product = await ProductService.create(submitData)
+            product = await ProductService.create(formData)
             notifyPositive('Produto cadastrado com sucesso')
         }
 
