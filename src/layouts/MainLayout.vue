@@ -75,7 +75,7 @@ import {
     useRoute,
     RouteLocationRaw
 } from 'vue-router'
-import { useAuthStore } from 'stores/auth-store'
+import { useAuthStore } from 'src/modules/auth'
 import LeftMenu from 'layouts/menus/LeftMenu.vue'
 import UserAvatarMenu from 'layouts/menus/UserAvatarMenu.vue'
 

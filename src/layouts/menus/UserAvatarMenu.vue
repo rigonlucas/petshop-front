@@ -38,8 +38,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthStore } from 'stores/auth-store'
-import AuthService from 'src/features/auth/services/AuthService'
+import { useAuthStore } from 'src/modules/auth'
+import AuthService from 'src/modules/auth/services/AuthService'
 
 const authStore = useAuthStore()
 const user = authStore.getUser

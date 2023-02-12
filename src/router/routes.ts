@@ -1,9 +1,10 @@
 import { RouteRecordRaw } from 'vue-router'
-import clients from 'src/router/routes/clients'
-import schedules from 'src/router/routes/schedules'
-import auth from 'src/router/routes/auth'
-import products from 'src/router/routes/products'
-import users from 'src/router/routes/users'
+import { routes as clientRoutes } from 'src/modules/client'
+import { routes as scheduleRoutes } from 'src/modules/schedule'
+import { routes as authRoutes } from 'src/modules/auth'
+import { routes as productRoutes } from 'src/modules/products'
+
+import users from 'src/modules/user/routes'
 
 declare module 'vue-router' {
     interface RouteMeta {
@@ -16,15 +17,15 @@ declare module 'vue-router' {
 }
 
 const routes: RouteRecordRaw[] = [
-    ...auth,
+    ...authRoutes,
     {
         path: '/',
         component: () => import('layouts/MainLayout.vue'),
         children: [
             { name: 'home', path: '/dashboard', component: () => import('pages/IndexPage.vue') },
-            ...schedules,
-            ...clients,
-            ...products,
+            ...scheduleRoutes,
+            ...clientRoutes,
+            ...productRoutes,
             ...users,
         ],
         meta: {

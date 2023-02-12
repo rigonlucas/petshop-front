@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { QSelectOption } from 'quasar'
 import { PaginatedServerResponse } from 'src/models/ApiModels'
-import { ClientModel } from 'src/features/client/models/ClientModel'
+import { ClientModel } from 'src/modules/client/models/ClientModel'
 
 export interface DetailedSelectOption<Ts> extends QSelectOption<number> {
     details: Ts,

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useAuthStore } from 'stores/auth-store'
+import { useAuthStore } from 'src/modules/auth'
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
