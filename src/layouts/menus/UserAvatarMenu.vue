@@ -2,37 +2,13 @@
     <q-toolbar-title>
         {{ user.account.name }}
     </q-toolbar-title>
-    <q-space />
+    <q-space/>
 
     <div class="q-gutter-sm row items-center no-wrap mr-lg-5">
-        <q-btn round dense flat color="grey-8" icon="notifications">
-            <q-badge color="red" text-color="white" floating>
-                2
-            </q-badge>
-            <q-tooltip>Notifications</q-tooltip>
-        </q-btn>
-        <q-btn round dense flat icon="account_circle">
-            <q-tooltip>Minha conta</q-tooltip>
-            <q-menu>
-                <q-list style="min-width: 100px">
-                    <q-item
-                        v-if="user.roles.length"
-                        clickable
-                        v-close-popup
-                        :to="{ name: 'users.index' }"
-                    >
-                        <q-item-section>Usuários</q-item-section>
-                    </q-item>
-                    <q-separator />
-                    <q-item clickable v-close-popup>
-                        <q-item-section>Ajuda &amp; Feedback</q-item-section>
-                    </q-item>
-                    <q-separator />
-                    <q-item clickable v-close-popup>
-                        <q-item-section @click="handleLogout">Sair</q-item-section>
-                    </q-item>
-                </q-list>
-            </q-menu>
+        <q-btn dense flat icon="notifications" round>
+            <div id="countDownloads"></div>
+            <q-tooltip>Meus processamentos</q-tooltip>
+            <ProcessNotification/>
         </q-btn>
     </div>
 </template>
@@ -40,6 +16,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from 'src/modules/auth'
 import AuthService from 'src/modules/auth/services/AuthService'
+import ProcessNotification from 'layouts/Notifications/Process/ProcessNotification.vue'
 
 const authStore = useAuthStore()
 const user = authStore.getUser
