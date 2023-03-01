@@ -4,44 +4,50 @@
         anchor="bottom middle"
         max-height="500px"
         max-width="250px"
-        persistent
         self="top middle"
         style="min-width: 350px"
+        @before-show="handleChangeStatus"
     >
         <q-item-label header>
-            Central de downloads
+            Central de downloads de relatórios
         </q-item-label>
         <q-separator/>
+        <div v-if="isLoading" class="text-center q-my-md">
+            <q-spinner-dots color="primary" size="40px"/>
+        </div>
 
         <q-list v-for="(item) in data.data" :key="item._id">
-            <div v-if="isLoading" class="text-center q-my-md">
-                <q-spinner-dots color="primary" size="40px"/>
-            </div>
             <q-item
                 v-ripple
-                :caption="item.file_type"
-                :href=item?.temporary_url?.url
                 clickable
+                :caption="item.file_type"
                 expand-icon-toggle
                 expand-separator
                 target="_blank"
             >
-                <q-item-section avatar>
-                    <q-icon
-                        :color=resolveIconColor(item.file_type)
-                        :name=resolveIcon(item.file_type)
-                        size="md"
-                    />
-                </q-item-section>
-
                 <q-item-section>
-                    <q-item-label lines="1">{{ item.name }}</q-item-label>
+                    <q-item-label>
+                        <q-icon
+                            :color=resolveIconColor(item.file_type)
+                            :name=resolveIcon(item.file_type)
+                            size="sm"
+                        />
+                        {{ item.name }}
+                    </q-item-label>
                     <template v-if="!item?.has_error" >
-                        <q-item-label caption>
+                        <q-item-label caption class="pt-lg-5">
                             <template
                                 v-if= "new Date(parseInt(item?.temporary_url?.expires_at.$date.$numberLong)) > new Date()"
                             >
-                                Válido até {{ format(new Date(parseInt(item?.temporary_url?.expires_at.$date.$numberLong)), 'dd/MM/yyyy HH:mm:ss') }}
+                                Válido até
+                                <strong>
+                                    {{
+                                        format(
+                                            new Date(parseInt(item?.temporary_url?.expires_at.$date.$numberLong)),
+                                            'dd/MM/yyyy HH:mm:ss'
+                                        )
+                                    }}
+                                </strong>
                             </template>
                             <template
                                 v-else
@@ -60,10 +66,12 @@
                     </template>
                 </q-item-section>
                 <q-item-label v-if="!item.has_error" caption>
-                    <q-icon
+                    <q-btn
+                        :href=item?.temporary_url?.url
+                        flat
                         color="blue"
-                        name="download"
-                        size="xs"
+                        icon="download"
+                        size="md"
                     />
                 </q-item-label>
             </q-item>
@@ -77,21 +85,30 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { defineEmits, reactive, ref } from 'vue'
 import axios from 'axios'
-import NotificationProcessService from 'src/modules/Notifications/Process/Services/NotificationProcessService'
+import NotificationProcessService from 'src/modules/notifications/process/services/NotificationProcessService'
 import { notifyNegative } from 'src/utils/NotifyHelper'
 import { PaginatedServerResponse } from 'src/models/ApiModels'
-import ProcessModel from 'src/modules/Notifications/Process/models/ProcessModel'
-import { format } from 'date-fns'
+import ProcessModel from 'src/modules/notifications/process/models/ProcessModel'
+import { addSeconds, format } from 'date-fns'
 
-const isLoading = ref(true)
+const isLoading = ref(false)
+const lastLoad = ref<Date|null>(null)
+interface Emits {
+    (event: 'countNotifications', value: number): void
+}
+const emit = defineEmits<Emits>()
+
 let data: PaginatedServerResponse<ProcessModel> = reactive([])
-
 async function handleChangeStatus() {
     isLoading.value = true
     try {
-        data = await NotificationProcessService.list()
+        if (lastLoad.value == null || new Date() > lastLoad.value) {
+            data = await NotificationProcessService.list()
+            lastLoad.value = addSeconds(new Date(), 3)
+            emit('countNotifications', data.data.length)
+        }
     } catch (error: unknown) {
         if (!axios.isAxiosError(error)) {
             throw error
@@ -123,7 +140,6 @@ function resolveIconColor(icon: string): string {
 }
 
 handleChangeStatus()
-
 </script>
 
 <style scoped>
